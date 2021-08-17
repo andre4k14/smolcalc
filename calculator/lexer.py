@@ -1,4 +1,4 @@
-from tokens import Token, TokenType
+from calculator.tokens import Token, TokenType
 WHITESPACE = ' \n\t'
 DIGITS = '0123456789'
 class Lexer:
@@ -25,7 +25,7 @@ class Lexer:
                 yield self.generate_pi()
             elif self.current_char == 'l' or self.current_char == 'L':
                 yield self.generate_log()
-            elif self.current_char == 'w' or self.current_char == 'W':
+            elif self.current_char == 's' or self.current_char == 'S':
                 yield self.generate_sqrt()
             elif self.current_char == '!':
                 yield self.generate_factorial()
@@ -114,8 +114,8 @@ class Lexer:
     def generate_sqrt(self):
         sqrt_str = self.current_char
         self.advance()
-        Lib_S = ['r','z','(']
-        Lib_B = ['R','Z','(']
+        Lib_S = ['q','r','t','(']
+        Lib_B = ['Q','R','T','(']
         for x in range(len(Lib_S)):
             if self.current_char == Lib_S[x] or self.current_char == Lib_S[x]:
                 sqrt_str += self.current_char
@@ -123,7 +123,7 @@ class Lexer:
             else:
                 self.raise_errors()
 
-        if str(sqrt_str).lower() == 'wrz(':
+        if str(sqrt_str).lower() == 'sqrt(':
             return Token(TokenType.SQUAREROOT)
 
     def generate_factorial(self):

@@ -1,5 +1,5 @@
-from nodes import *
-from values import Number
+from  calculator.nodes import *
+from  calculator.values import Number
 import math
 class Interpreter:
     def visit(self, node):
