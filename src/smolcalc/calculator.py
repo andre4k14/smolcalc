@@ -1,6 +1,6 @@
-from calculator.lexer import Lexer
-from calculator.parser_ import Parser
-from calculator.interpreter import Interpreter
+from smolcalc.lexer import Lexer
+from smolcalc.parser_ import Parser
+from smolcalc.interpreter import Interpreter
 
 def calculator(text):
     """ Method for calculating a math expression in form of string
@@ -17,6 +17,6 @@ def calculator(text):
             interpreter = Interpreter()
             value = interpreter.visit(tree)
             return value
-    except Exception as e:
+    except Exception as e: # change
         return e
 

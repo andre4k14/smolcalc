@@ -1,4 +1,4 @@
-from calculator.tokens import Token, TokenType
+from smolcalc.tokens import Token, TokenType
 WHITESPACE = ' \n\t'
 DIGITS = '0123456789'
 class Lexer:

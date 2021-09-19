@@ -1,5 +1,5 @@
-from  calculator.nodes import *
-from  calculator.values import Number
+from smolcalc.values import Number
+from smolcalc.nodes import *
 import math
 class Interpreter:
     def visit(self, node):
@@ -32,7 +32,7 @@ class Interpreter:
         return Number(-self.visit(node.node).value)
 
     def visit_ExponentNode(self, node):
-        if node.node_a == 0 and node.node_a == 0:
+        if node.node_a == 0 and node.node_b == 0:
             raise Exception("0^0 ist Undefiniert.")
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 
