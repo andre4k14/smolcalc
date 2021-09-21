@@ -23,7 +23,7 @@ class Interpreter:
         try:
             return Number(self.visit(node.node_a).value / self.visit(node.node_b).value)
         except:
-            raise Exception("Runtime math error")
+            raise Exception("runtime math error (e.g. Division by zero)")
 
     def visit_PlusNode(self, node):
         return self.visit(node.node)
@@ -33,7 +33,7 @@ class Interpreter:
 
     def visit_ExponentNode(self, node):
         if node.node_a == 0 and node.node_b == 0:
-            raise Exception("0^0 ist Undefiniert.")
+            raise Exception("0^0 is undefined.")
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 
     def visit_SquarerootNode(self, node):
@@ -47,6 +47,6 @@ class Interpreter:
 
     def visit_FactorialNode(self,node):
         if not self.visit(node.node).value.is_integer():
-            raise Exception("Man kann nur ganze Zahl bei Factorial einsetzen")
+            raise Exception("runtime math error ( e.g. only whole numbers)")
         return Number(math.factorial(int(self.visit(node.node).value)))
 

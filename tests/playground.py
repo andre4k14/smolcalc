@@ -14,7 +14,7 @@ def main():
     print(type(calculator("10+5.1")))
     print(calculator("10+5.1"))
     print(type(calculator("-.")))
-    print(calculator("-."))
+    print(calculator("10*"))
 
 
 
