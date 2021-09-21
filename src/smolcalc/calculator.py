@@ -16,7 +16,8 @@ def calculator(text):
         if tree:
             interpreter = Interpreter()
             value = interpreter.visit(tree)
+            value = str(value)
             return value
     except Exception as e: # change
-        return e
+        return str(e)
 
