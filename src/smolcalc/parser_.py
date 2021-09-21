@@ -1,5 +1,5 @@
-from tokens import TokenType
-from nodes import *
+from smolcalc.tokens import TokenType
+from smolcalc.nodes import *
 
 class Parser:
     def __init__(self,tokens):
