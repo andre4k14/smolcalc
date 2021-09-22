@@ -67,6 +67,9 @@ class Parser:
     def factor(self):
         token = self.current_token
 
+        if token is None: # maybe that could be prettier in another version
+            self.raise_error()
+
         if token.type == TokenType.SQUAREROOT:
             self.advance()
             result = self.expr()

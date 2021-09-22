@@ -9,11 +9,10 @@ def cleanup(*args):
 
 
 def main():
-    print(type(calculator("10+5")))
     print(calculator("10+5"))
-    print(type(calculator("10+5.1")))
     print(calculator("10+5.1"))
-    print(type(calculator("-.")))
+    print(calculator("0^0"))
+    print(calculator("1234"))
     print(calculator("10*"))
 
 

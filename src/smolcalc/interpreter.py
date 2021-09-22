@@ -32,7 +32,7 @@ class Interpreter:
         return Number(-self.visit(node.node).value)
 
     def visit_ExponentNode(self, node):
-        if node.node_a == 0 and node.node_b == 0:
+        if node.node_a.value == 0 and node.node_b.value == 0:
             raise Exception("0^0 is undefined.")
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 
