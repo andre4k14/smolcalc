@@ -8,6 +8,6 @@ class Number:
         return f"{self.value}"
 
     def __str__(self):
-        if self.value.is_integer():
+        if self.value.is_integer() and str(self.value).find("e") == -1:
             return f"{int(self.value)}"
         return f"{self.value}"
