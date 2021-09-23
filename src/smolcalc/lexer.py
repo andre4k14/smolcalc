@@ -1,8 +1,11 @@
 from smolcalc.tokens import Token, TokenType
+
 WHITESPACE = ' \n\t'
 DIGITS = '0123456789'
+
+
 class Lexer:
-    def __init__(self,text):
+    def __init__(self, text):
         self.text = iter(text)
         self.advance()
 
@@ -13,7 +16,7 @@ class Lexer:
             self.current_char = None
 
     def raise_errors(self):
-        raise Exception (f"Illegal character '{self.current_char}'")
+        raise Exception(f"Illegal character '{self.current_char}'")
 
     def generate_tokens(self):
         while self.current_char != None:
@@ -78,14 +81,14 @@ class Lexer:
     def generate_pi(self):
         pi_str = self.current_char
         self.advance()
-        if self.current_char  == 'i' or self.current_char  == 'I':
-            pi_str +=  self.current_char
+        if self.current_char == 'i' or self.current_char == 'I':
+            pi_str += self.current_char
             self.advance()
         else:
             self.raise_errors()
 
         if str(pi_str).lower() == 'pi':
-            return Token(TokenType.NUMBER,float('3.141592653589793'))
+            return Token(TokenType.NUMBER, float('3.141592653589793'))
 
     def generate_log(self):
         log_str = self.current_char
@@ -98,7 +101,6 @@ class Lexer:
             self.advance()
         else:
             self.raise_errors()
-
 
         if self.current_char == '(':
             log_str += self.current_char
@@ -114,8 +116,8 @@ class Lexer:
     def generate_sqrt(self):
         sqrt_str = self.current_char
         self.advance()
-        Lib_S = ['q','r','t','(']
-        Lib_B = ['Q','R','T','(']
+        Lib_S = ['q', 'r', 't', '(']
+        Lib_B = ['Q', 'R', 'T', '(']
         for x in range(len(Lib_S)):
             if self.current_char == Lib_S[x] or self.current_char == Lib_S[x]:
                 sqrt_str += self.current_char
@@ -137,4 +139,3 @@ class Lexer:
 
         if str(fac_str) == '!(':
             return Token(TokenType.FACTORIAL)
-

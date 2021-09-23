@@ -162,7 +162,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
 
     def test_syntx(self):
-        operator = None
         self.assertEqual(calculator(f"( ( ( ( ( (.) ) ) ) ) ) "), "0")
         self.assertEqual(calculator(f"(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"), "3.20512717698112e-61")
         self.assertEqual(calculator(f"())()"), "Invalid syntax")
@@ -172,8 +171,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"()"), "Invalid syntax")
         self.assertEqual(calculator(f")("), "Invalid syntax")
         self.assertEqual(calculator(f"eqwrrzuitttfh"), "Illegal character 'e'")
-
-
 
 
 if __name__ == '__main__':
