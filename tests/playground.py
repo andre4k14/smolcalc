@@ -10,7 +10,8 @@ def cleanup(*args):
 
 def main():
     print(bool(None))
-    print(calculator(""))
+
+    print(calculator(None))
     print(calculator("(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"))
     #print(calculator("ln(-12)"))
     #print(calculator(" 10^(50)"))

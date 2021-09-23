@@ -3,12 +3,14 @@ from smolcalc.parser_ import Parser
 from smolcalc.interpreter import Interpreter
 
 def calculator(text):
-    """ Method for calculating a math expression in form of string
+    """ Method for calculating a math expression in form of a string
 
-    :param text: math expression in form of string
-    :return: results or exception
+    :param text: math expression in form of a string
+    :return: (results or exception) in form of a string
     """
     try:
+        if text is None:
+            return "function received none as argument"
         lexer = Lexer(text)
         tokens = lexer.generate_tokens()
         parser = Parser(tokens)
