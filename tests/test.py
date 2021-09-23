@@ -113,15 +113,15 @@ class Testsmolcalc(unittest.TestCase):
 
     def test_ln(self):
         operator = "ln()"
-        self.assertEqual(calculator(f"ln(-12)"), "runtime math error (no negative numbers)")
-        self.assertEqual(calculator(f"ln(0)"), "1")
-        self.assertEqual(calculator(f"ln(10)"), "3628800")
-        self.assertEqual(calculator(f"ln(10-20)"), "runtime math error (no negative numbers)")
-        self.assertEqual(calculator(f"ln(25.6)"), "runtime math error (only whole numbers)")
-        self.assertEqual(calculator(f"ln(-25)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"ln(-12)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"ln(0)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"ln(10)"), "2.302585092994046")
+        self.assertEqual(calculator(f"ln(10-20)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"ln(25.6)"), "3.242592351485517")
+        self.assertEqual(calculator(f"ln(-25)"), "math domain error (complex numbers not supported)")
         self.assertEqual(calculator(f"ln()"), "Invalid syntax")
 
-        self.assertEqual(calculator(f"!(!(3))"), "720")
+        self.assertEqual(calculator(f"ln(ln(3))"), "0.0940478276166991")
 
         self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")

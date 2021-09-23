@@ -7,6 +7,10 @@ class Interpreter:
         method = getattr(self, method_name)
         return method(node)
 
+    def raise_error_complex_numbers(self):
+        return Exception("math domain error (complex numbers not supported)")
+
+
     def visit_NumberNode(self, node):
         return Number(node.value)
 
@@ -37,16 +41,25 @@ class Interpreter:
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 
     def visit_SquarerootNode(self, node):
+        if self.visit(node.node).value <= 0:
+            return self.raise_error_complex_numbers()
+
         return Number(math.pow(self.visit(node.node).value,0.5))
 
     def visit_NLOG_Node(self, node):
+        if self.visit(node.node).value <= 0:
+            return self.raise_error_complex_numbers()
+
         return Number(math.log(self.visit(node.node).value))
 
     def visit_LOG_10_Node(self, node):
+        if self.visit(node.node).value <= 0:
+            return self.raise_error_complex_numbers()
+
         return Number(math.log10(self.visit(node.node).value))
 
     def visit_FactorialNode(self,node):
-        if not self.visit(node.node).value.is_integer():
+        if not isinstance(self.visit(node.node).value, int) and not self.visit(node.node).value.is_integer():
             raise Exception("runtime math error (only whole numbers)")
         if self.visit(node.node).value < 0:
             raise Exception("runtime math error (no negative numbers)")
