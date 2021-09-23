@@ -47,6 +47,9 @@ class Interpreter:
 
     def visit_FactorialNode(self,node):
         if not self.visit(node.node).value.is_integer():
-            raise Exception("runtime math error ( e.g. only whole numbers)")
+            raise Exception("runtime math error (only whole numbers)")
+        if self.visit(node.node).value < 0:
+            raise Exception("runtime math error (no negative numbers)")
+
         return Number(math.factorial(int(self.visit(node.node).value)))
 

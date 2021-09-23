@@ -100,5 +100,26 @@ class Testsmolcalc(unittest.TestCase):
         # should return an error message
         self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
+    def test_fac(self):
+        operator = "!()"
+        self.assertEqual(calculator(f"!(-12)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"!(0)"), "1")
+        self.assertEqual(calculator(f"!(10)"), "3628800")
+        self.assertEqual(calculator(f"!(10-20)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"!(25.6)"), "runtime math error (only whole numbers)")
+        self.assertEqual(calculator(f"!(-25)"), "runtime math error (only whole numbers)")
+        self.assertEqual(calculator(f"!()"), "Invalid syntax")
+
+        self.assertEqual(calculator(f"!()"), "")
+        self.assertEqual(calculator(f"!()"), "")
+        self.assertEqual(calculator(f"!()"), "")
+
+
+
+        # should return an error message
+        self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
+        self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
 if __name__ == '__main__':
     unittest.main()
