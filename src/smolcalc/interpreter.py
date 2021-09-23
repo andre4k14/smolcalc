@@ -41,7 +41,7 @@ class Interpreter:
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 
     def visit_SquarerootNode(self, node):
-        if self.visit(node.node).value <= 0:
+        if self.visit(node.node).value < 0:
             return self.raise_error_complex_numbers()
 
         return Number(math.pow(self.visit(node.node).value,0.5))

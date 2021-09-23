@@ -123,8 +123,44 @@ class Testsmolcalc(unittest.TestCase):
 
         self.assertEqual(calculator(f"ln(ln(3))"), "0.0940478276166991")
 
-        self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
+    def test_lg(self):
+        operator = "lg()"
+        self.assertEqual(calculator(f"lg(-12)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"lg(0)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"lg(10)"), "1")
+        self.assertEqual(calculator(f"lg(10-20)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"lg(25.6)"), "1.4082399653118496")
+        self.assertEqual(calculator(f"lg(-25)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"lg()"), "Invalid syntax")
+
+        self.assertEqual(calculator(f"lg(lg(3))"), "-0.3213712361305426")
+
+        self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
+    def test_pi(self):
+        operator = "pi"
+        self.assertEqual(calculator(f"{operator}"), "3.141592653589793")
+        self.assertEqual(calculator(f"-{operator}"), "-3.141592653589793")
+        self.assertEqual(calculator(f"{operator}^2"), "9.869604401089358")
+        self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+        self.assertEqual(calculator(f"-{operator}*{operator}"), "-9.869604401089358")
+
+    def test_sqrt(self):
+        operator = "sqrt()"
+        self.assertEqual(calculator(f"sqrt(-12)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"sqrt(0)"), "0")
+        self.assertEqual(calculator(f"sqrt(10)"), "3.1622776601683795")
+        self.assertEqual(calculator(f"sqrt(10-20)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"sqrt(25.6)"), "5.059644256269407")
+        self.assertEqual(calculator(f"sqrt(-25)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(calculator(f"sqrt(100)"), "10")
+
+        self.assertEqual(calculator(f"sqrt(sqrt(3))"), "1.3160740129524924")
+
+        self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
 
 if __name__ == '__main__':
     unittest.main()
