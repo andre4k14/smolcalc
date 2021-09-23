@@ -1,8 +1,9 @@
 from smolcalc.tokens import TokenType
 from smolcalc.nodes import *
 
+
 class Parser:
-    def __init__(self,tokens):
+    def __init__(self, tokens):
         self.tokens = iter(tokens)
         self.advance()
 
@@ -29,7 +30,7 @@ class Parser:
         result = self.term()
 
         while self.current_token != None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
-            if  self.current_token.type == TokenType.PLUS:
+            if self.current_token.type == TokenType.PLUS:
                 self.advance()
                 result = AddNode(result, self.term())
             elif self.current_token.type == TokenType.MINUS:
@@ -42,7 +43,7 @@ class Parser:
         result = self.exponent()
 
         while self.current_token != None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
-            if  self.current_token.type == TokenType.MULTIPLY:
+            if self.current_token.type == TokenType.MULTIPLY:
                 self.advance()
                 result = MultiplyNode(result, self.exponent())
             elif self.current_token.type == TokenType.DIVIDE:
@@ -55,17 +56,16 @@ class Parser:
         result = self.factor()
 
         while self.current_token != None and self.current_token.type == TokenType.EXPONENT:
-                self.advance()
-                result = ExponentNode(result, self.factor())
-
+            self.advance()
+            result = ExponentNode(result, self.factor())
 
         return result
 
-
-
-
     def factor(self):
         token = self.current_token
+
+        if token is None:  # maybe that could be prettier in another version
+            self.raise_error()
 
         if token.type == TokenType.SQUAREROOT:
             self.advance()
@@ -106,9 +106,6 @@ class Parser:
 
             self.advance()
             return FactorialNode(result)
-
-
-
 
         if token.type == TokenType.LPARPEN:
             self.advance()
