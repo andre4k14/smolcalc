@@ -68,7 +68,7 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10{operator}(+50)"), "0.2")
         self.assertEqual(calculator(f"10{operator}(-50)"), "-0.2")
         self.assertEqual(calculator(f"10{operator}(-50.1)"), "-0.1996007984031936")
-        self.assertEqual(calculator(f"0.0{operator}0"), "runtime math error (e.g. Division by zero)")
+        self.assertEqual(calculator(f"0.0{operator}0"), "runtime math error (Division by zero)")
 
         self.assertEqual(calculator(f"{operator}."), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(.)"), "Invalid syntax")
@@ -160,6 +160,19 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"sqrt(sqrt(3))"), "1.3160740129524924")
 
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
+
+    def test_syntx(self):
+        operator = None
+        self.assertEqual(calculator(f"( ( ( ( ( (.) ) ) ) ) ) "), "0")
+        self.assertEqual(calculator(f"(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"), "3.20512717698112e-61")
+        self.assertEqual(calculator(f"())()"), "Invalid syntax")
+        self.assertEqual(calculator(f"1+2+3"), "6")
+        self.assertEqual(calculator(f""), "an empty expression cannot be evaluated")
+        self.assertEqual(calculator(f" ( ( ( (.) ) ) ) ) "), "Invalid syntax")
+        self.assertEqual(calculator(f"()"), "Invalid syntax")
+        self.assertEqual(calculator(f")("), "Invalid syntax")
+        self.assertEqual(calculator(f"eqwrrzuitttfh"), "Illegal character 'e'")
+
 
 
 if __name__ == '__main__':

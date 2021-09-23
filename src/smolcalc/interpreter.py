@@ -27,7 +27,7 @@ class Interpreter:
         try:
             return Number(self.visit(node.node_a).value / self.visit(node.node_b).value)
         except:
-            raise Exception("runtime math error (e.g. Division by zero)")
+            raise Exception("runtime math error (Division by zero)")
 
     def visit_PlusNode(self, node):
         return self.visit(node.node)
@@ -36,7 +36,7 @@ class Interpreter:
         return Number(-self.visit(node.node).value)
 
     def visit_ExponentNode(self, node):
-        if node.node_a.value == 0 and node.node_b.value == 0:
+        if self.visit(node.node_a).value == 0 and self.visit(node.node_a).value == 0:
             raise Exception("0^0 is undefined.")
         return Number(math.pow(self.visit(node.node_a).value,self.visit(node.node_b).value))
 

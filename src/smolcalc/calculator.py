@@ -18,6 +18,8 @@ def calculator(text):
             value = interpreter.visit(tree)
             value = str(value)
             return value
+        else:
+            return "an empty expression cannot be evaluated"
     except Exception as e: # change
         return str(e)
 
