@@ -1,6 +1,7 @@
 import unittest
 from smolcalc.calculator import calculator
 
+
 class Testsmolcalc(unittest.TestCase):
 
     def test_add(self):
@@ -11,7 +12,7 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10{operator}(+50)"), "60")
         self.assertEqual(calculator(f"10{operator}(-50)"), "-40")
         self.assertEqual(calculator(f"10{operator}(-50.1)"), "-40.1")
-        self.assertEqual(calculator(f"0.0{operator}0"),"0")
+        self.assertEqual(calculator(f"0.0{operator}0"), "0")
 
         # just weird
         self.assertEqual(calculator(f"{operator}."), "0")
@@ -21,8 +22,6 @@ class Testsmolcalc(unittest.TestCase):
         # should return an error message
         self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
-
-
 
     def test_sub(self):
         operator = "-"
@@ -43,7 +42,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
 
-
     def test_mult(self):
         operator = "*"
         self.assertEqual(calculator(f"10{operator}5"), "50")
@@ -53,7 +51,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10{operator}(-50)"), "-500")
         self.assertEqual(calculator(f"10{operator}(-50.1)"), "-501")
         self.assertEqual(calculator(f"0.0{operator}0"), "0")
-
 
         self.assertEqual(calculator(f"{operator}."), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(.)"), "Invalid syntax")
@@ -73,7 +70,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10{operator}(-50.1)"), "-0.1996007984031936")
         self.assertEqual(calculator(f"0.0{operator}0"), "runtime math error (e.g. Division by zero)")
 
-
         self.assertEqual(calculator(f"{operator}."), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(.)"), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(-(.))"), "Invalid syntax")
@@ -92,7 +88,6 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"10{operator}(-50.1)"), "7.943282347242789e-51")
         self.assertEqual(calculator(f"0.0{operator}0"), "0^0 is undefined.")
 
-
         self.assertEqual(calculator(f"{operator}."), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(.)"), "Invalid syntax")
         self.assertEqual(calculator(f"{operator}(-(.))"), "Invalid syntax")
@@ -108,16 +103,26 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(calculator(f"!(10)"), "3628800")
         self.assertEqual(calculator(f"!(10-20)"), "runtime math error (no negative numbers)")
         self.assertEqual(calculator(f"!(25.6)"), "runtime math error (only whole numbers)")
-        self.assertEqual(calculator(f"!(-25)"), "runtime math error (only whole numbers)")
+        self.assertEqual(calculator(f"!(-25)"), "runtime math error (no negative numbers)")
         self.assertEqual(calculator(f"!()"), "Invalid syntax")
 
-        self.assertEqual(calculator(f"!()"), "")
-        self.assertEqual(calculator(f"!()"), "")
-        self.assertEqual(calculator(f"!()"), "")
+        self.assertEqual(calculator(f"!(!(3))"), "720")
 
+        self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
+        self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
 
+    def test_ln(self):
+        operator = "ln()"
+        self.assertEqual(calculator(f"ln(-12)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"ln(0)"), "1")
+        self.assertEqual(calculator(f"ln(10)"), "3628800")
+        self.assertEqual(calculator(f"ln(10-20)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"ln(25.6)"), "runtime math error (only whole numbers)")
+        self.assertEqual(calculator(f"ln(-25)"), "runtime math error (no negative numbers)")
+        self.assertEqual(calculator(f"ln()"), "Invalid syntax")
 
-        # should return an error message
+        self.assertEqual(calculator(f"!(!(3))"), "720")
+
         self.assertEqual(calculator(f"{operator}"), "Invalid syntax")
         self.assertEqual(calculator(f"10.1{operator}"), "Invalid syntax")
 
