@@ -119,7 +119,7 @@ class Lexer:
         Lib_S = ['q', 'r', 't', '(']
         Lib_B = ['Q', 'R', 'T', '(']
         for x in range(len(Lib_S)):
-            if self.current_char == Lib_S[x] or self.current_char == Lib_S[x]:
+            if self.current_char == Lib_S[x] or self.current_char == Lib_B[x]:
                 sqrt_str += self.current_char
                 self.advance()
             else:
