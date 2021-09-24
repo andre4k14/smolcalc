@@ -26,4 +26,10 @@ def evaluate(text) -> str:
         return str(e)
 
 def evaluate_all(expressions) -> list:
-    return [evaluate(i) for i in expressions ]
+    """ Method for calculating multiple math expressions given in form of list of strings (calls method evaluate)
+
+    :param expressions: list of strings ()
+    :return: list of strings
+    """
+    if isinstance(expressions,list):
+        return [evaluate(i) if isinstance(i,str) else "no string, not evaluated " for i in expressions ]
