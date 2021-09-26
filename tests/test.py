@@ -87,6 +87,7 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10{operator}(-50)"), "1e-50")
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "7.943282347242789e-51")
         self.assertEqual(evaluate(f"0.0{operator}0"), "0^0 is undefined.")
+        self.assertEqual(evaluate(f"2{operator}2{operator}2{operator}2"), "65536")
 
         self.assertEqual(evaluate(f"{operator}."), "Invalid syntax")
         self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax")

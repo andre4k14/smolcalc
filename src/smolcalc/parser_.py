@@ -57,7 +57,7 @@ class Parser:
 
         while self.current_token != None and self.current_token.type == TokenType.EXPONENT:
             self.advance()
-            result = ExponentNode(result, self.factor())
+            result = ExponentNode(result, self.exponent())
 
         return result
 
