@@ -1,6 +1,6 @@
 from smolcalc.tokens import Token, TokenType
 
-WHITESPACE = '_ \n\t'
+WHITESPACE = ' \n\t'
 DIGITS = '0123456789'
 
 
