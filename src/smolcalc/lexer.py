@@ -1,7 +1,10 @@
 from smolcalc.tokens import Token, TokenType
 
-WHITESPACE = ' \n\t'
+
+IGNORE = '_'
+WHITESPACE = ' \n\t' + IGNORE
 DIGITS = '0123456789'
+
 
 
 class Lexer:
@@ -62,14 +65,16 @@ class Lexer:
         if number_str == '.':
             decimal_point_count = 1
         self.advance()
-        while self.current_char != None and (self.current_char == '.' or self.current_char in DIGITS):
-            if self.current_char == '.':
-                decimal_point_count += 1
-                if decimal_point_count > 1:
-                    break
-
-            number_str += self.current_char
-            self.advance()
+        while self.current_char != None and (self.current_char == '.' or self.current_char in DIGITS or self.current_char in IGNORE):
+            if not self.current_char in IGNORE:
+                if self.current_char == '.':
+                    decimal_point_count += 1
+                    if decimal_point_count > 1:
+                        break
+                number_str += self.current_char
+                self.advance()
+            else:
+                self.advance()
 
         if number_str.startswith('.'):
             number_str = '0' + number_str
