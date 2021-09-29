@@ -177,6 +177,10 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"pi^pi^pi^pi"), "math range error")
         self.assertEqual(evaluate(f"6/2*(1+2)"), "9")
         self.assertEqual(evaluate(f"100_000"), "100000")
+        self.assertEqual(evaluate(f"_1__00_0_00"), "100000")
+        self.assertEqual(evaluate(f"__10_0_00_0_+56_7"), "100567")
+        self.assertEqual(evaluate(f"______________________________1________________00"), "100")
+        self.assertEqual(evaluate(f"254235_-235"), "254000")
 
     def test_eval(self):
         self.assertEqual(evaluate(None), "function received an argument of wrong type (not string)")
