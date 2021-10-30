@@ -200,6 +200,20 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"______________________________1________________00"), "100")
         self.assertEqual(evaluate(f"254235_-235"), "254000")
 
+    def test_decimal_separator(self):
+        self.assertEqual(evaluate("1.0"), "1")
+        self.assertEqual(evaluate("1,0"),"Illegal character ','")
+        self.assertEqual(evaluate("1,0",decimal_separator=","), "1")
+        self.assertEqual(evaluate("1,0", decimal_separator="asdfa"), "'asdfa' is not a valid decimal_separator")
+        self.assertEqual(evaluate("1,0", decimal_separator=print), "'<built-in function print>' is not a valid decimal_separator")
+        self.assertEqual(evaluate("1,0", decimal_separator=34.4), "'34.4' is not a valid decimal_separator")
+        self.assertEqual(evaluate("1,0", decimal_separator=34), "'34' is not a valid decimal_separator")
+        self.assertEqual(evaluate("1,0", decimal_separator=[3,4]), "'[3, 4]' is not a valid decimal_separator")
+
+
+
+
+
     def test_eval(self):
         self.assertEqual(evaluate(None), "function received an argument of wrong type (not string)")
         self.assertEqual(evaluate(2345345), "function received an argument of wrong type (not string)")
