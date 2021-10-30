@@ -54,21 +54,22 @@ def evaluate_all(expressions, decimal_separator=None) -> list:
     if not all([True if isinstance(i, str) else False for i in expressions]):
         raise Exception(f"expression in expressions is not type: str")
 
-    if not decimal_separator is None or not isinstance(decimal_separator, list) or not isinstance(decimal_separator,
-                                                                                                  str):
-        raise Exception("expressions to evaluate not in datatype: list")
+    if decimal_separator is None or isinstance(decimal_separator, list) or isinstance(decimal_separator,str):
 
-    if isinstance(decimal_separator, str):
-        decimal_separators = [decimal_separator for x in range(len(expressions))]
-    elif decimal_separator is None:
-        decimal_separators = None
+        if isinstance(decimal_separator, str):
+            decimal_separators = [decimal_separator for x in range(len(expressions))]
+        elif decimal_separator is None:
+            decimal_separators = None
 
-    if isinstance(decimal_separator, list):
-        if len(decimal_separator) != len(expressions):
-            raise Exception("length decimal_separator list != expressions list")
-        decimal_separators = decimal_separator
+        if isinstance(decimal_separator, list):
+            if len(decimal_separator) != len(expressions):
+                raise Exception("length decimal_separator list != expressions list")
+            decimal_separators = decimal_separator
 
-    if not decimal_separators is None:
-        return [evaluate(i, decimal_separator) for i in expressions]
+        if not decimal_separators is None:
+            return [evaluate(e, decimal_separators[i]) for i,e in enumerate(expressions)]
+        else:
+            return [evaluate(i) for i in expressions]
+
     else:
-        return [evaluate(i) for i in expressions]
+        raise Exception("expressions to evaluate not in datatype: list")

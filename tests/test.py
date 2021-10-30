@@ -1,7 +1,7 @@
 import unittest
 from itertools import product
 
-from smolcalc.calculator import evaluate
+from smolcalc.calculator import evaluate, evaluate_all
 
 
 class TestSmolcalc(unittest.TestCase):
@@ -115,7 +115,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_ln(self):
-        operator = "ln" # ln()
+        operator = "ln"  # ln()
 
         # create version of pi e.g PI Pi pI pi
         upperchar = list(operator.upper())
@@ -150,12 +150,12 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_pi(self):
-        operator ="pi"
+        operator = "pi"
 
         # create version of pi e.g PI Pi pI pi
-        upperchar = list( operator.upper())
+        upperchar = list(operator.upper())
         lowerchar = list(operator.lower())
-        chars = list(zip(upperchar,lowerchar))
+        chars = list(zip(upperchar, lowerchar))
         operators = ["".join(x) for x in product(*chars)]
 
         for operator in operators:
@@ -164,7 +164,6 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}^2"), "9.869604401089358")
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
-
 
     def test_sqrt(self):
         operator = "sqrt()"
@@ -202,17 +201,14 @@ class TestSmolcalc(unittest.TestCase):
 
     def test_decimal_separator(self):
         self.assertEqual(evaluate("1.0"), "1")
-        self.assertEqual(evaluate("1,0"),"Illegal character ','")
-        self.assertEqual(evaluate("1,0",decimal_separator=","), "1")
+        self.assertEqual(evaluate("1,0"), "Illegal character ','")
+        self.assertEqual(evaluate("1,0", decimal_separator=","), "1")
         self.assertEqual(evaluate("1,0", decimal_separator="asdfa"), "'asdfa' is not a valid decimal_separator")
-        self.assertEqual(evaluate("1,0", decimal_separator=print), "'<built-in function print>' is not a valid decimal_separator")
+        self.assertEqual(evaluate("1,0", decimal_separator=print),
+                         "'<built-in function print>' is not a valid decimal_separator")
         self.assertEqual(evaluate("1,0", decimal_separator=34.4), "'34.4' is not a valid decimal_separator")
         self.assertEqual(evaluate("1,0", decimal_separator=34), "'34' is not a valid decimal_separator")
-        self.assertEqual(evaluate("1,0", decimal_separator=[3,4]), "'[3, 4]' is not a valid decimal_separator")
-
-
-
-
+        self.assertEqual(evaluate("1,0", decimal_separator=[3, 4]), "'[3, 4]' is not a valid decimal_separator")
 
     def test_eval(self):
         self.assertEqual(evaluate(None), "function received an argument of wrong type (not string)")
@@ -222,7 +218,39 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate([34, "wer"]), "function received an argument of wrong type (not string)")
         self.assertEqual(evaluate({34, 3453, 3453, 4, 3}), "function received an argument of wrong type (not string)")
         self.assertEqual(evaluate({"rtt": "lol"}), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate("1234+,5",decimal_separator=","),"1234,5")
+        self.assertEqual(evaluate("1234+,5", decimal_separator=","), "1234,5")
+
+    def test_eval_all(self):
+        with self.assertRaises(Exception) as context:
+            evaluate_all(None)
+        self.assertTrue("expressions is type: '<class 'NoneType'>' and not type: list" in str(context.exception))
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all(None)
+        self.assertTrue("expressions is type: '<class 'NoneType'>' and not type: list" in str(context.exception))
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all([34534, 3245, 345.56, [], {}, ""])
+        self.assertTrue("expression in expressions is not type: str" in str(context.exception))
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all([34534, 3245, 345.56, [], {}, ""])
+        self.assertTrue("expression in expressions is not type: str" in str(context.exception))
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all(["1", "1", "1", "1", "1"], [",", ".", ",", "."])
+        self.assertTrue("length decimal_separator list != expressions list" in str(context.exception))
+
+        self.assertEqual(evaluate_all(["1", "1", "1", "1", "1"], [",", ".", ",", ".", ","]), ["1", "1", "1", "1", "1"])
+
+        self.assertEqual(evaluate_all([",1", ".1", ",1", ".1", ",1"], [",", ".", ",", ".", ","]),
+                         ["0,1", "0.1", "0,1", "0.1", "0,1"])
+
+        self.assertEqual(evaluate_all([",1", ",1", ",1", ",1", ",1"],","),
+                         ["0,1", "0,1", "0,1", "0,1", "0,1"])
+
+        self.assertEqual(evaluate_all([".1", ".1", ".1", ".1", ".1"], "."),
+                         ["0.1", "0.1", "0.1", "0.1", "0.1"])
 
 
 if __name__ == '__main__':
