@@ -6,7 +6,8 @@ DIGITS = '0123456789'
 
 
 class Lexer:
-    def __init__(self, text):
+    def __init__(self, text, decimal_separator):
+        self.decimal_separator = decimal_separator
         self.text = iter(text)
         self.advance()
 
@@ -17,19 +18,21 @@ class Lexer:
             self.current_char = None
 
     def raise_errors(self):
+        if self.current_char is None:
+            raise Exception("Invalid syntax")
         raise Exception(f"Illegal character '{self.current_char}'")
 
     def generate_tokens(self):
         while self.current_char is not None:
             if self.current_char in WHITESPACE:
                 self.advance()
-            elif self.current_char == '.' or self.current_char in DIGITS:
+            elif self.current_char == self.decimal_separator or self.current_char in DIGITS:
                 yield self.generate_number()
-            elif self.current_char == 'p' or self.current_char == 'P':
+            elif self.current_char.lower() == "p":
                 yield self.generate_pi()
-            elif self.current_char == 'l' or self.current_char == 'L':
+            elif self.current_char.lower() == "l":
                 yield self.generate_log()
-            elif self.current_char == 's' or self.current_char == 'S':
+            elif self.current_char.lower() == "s":
                 yield self.generate_sqrt()
             elif self.current_char == '!':
                 yield self.generate_factorial()
@@ -58,19 +61,19 @@ class Lexer:
                 self.raise_errors()
 
     def generate_number(self):
-        number_str = self.current_char
-        decimal_point_count = 0
-        if number_str == '.':
-            decimal_point_count = 1
+        number_str = "." if self.current_char == self.decimal_separator else self.current_char
+        decimal_separator_count = 0
+        if number_str == self.decimal_separator:
+            decimal_separator_count = 1
         self.advance()
         while self.current_char is not None and (
-                self.current_char == '.' or self.current_char in DIGITS or self.current_char in IGNORE):
+                self.current_char == self.decimal_separator or self.current_char in DIGITS or self.current_char in IGNORE):
             if self.current_char not in IGNORE:
-                if self.current_char == '.':
-                    decimal_point_count += 1
-                    if decimal_point_count > 1:
+                if self.current_char == self.decimal_separator:
+                    decimal_separator_count += 1
+                    if decimal_separator_count > 1:
                         break
-                number_str += self.current_char
+                number_str += "." if self.current_char == self.decimal_separator else self.current_char
                 self.advance()
             else:
                 self.advance()
@@ -97,12 +100,13 @@ class Lexer:
     def generate_log(self):
         log_str = self.current_char
         self.advance()
-        if self.current_char == 'g' or self.current_char == 'G':
+        if self.current_char.lower() == "g":
             log_str += self.current_char
             self.advance()
-        elif self.current_char == 'n' or self.current_char == 'N':
+        elif self.current_char.lower() == "n":
             log_str += self.current_char
             self.advance()
+
         else:
             self.raise_errors()
 
@@ -120,10 +124,9 @@ class Lexer:
     def generate_sqrt(self):
         sqrt_str = self.current_char
         self.advance()
-        Lib_S = ['q', 'r', 't', '(']
-        Lib_B = ['Q', 'R', 'T', '(']
-        for x in range(len(Lib_S)):
-            if self.current_char == Lib_S[x] or self.current_char == Lib_B[x]:
+        chars = ['q', 'r', 't', '(']
+        for x in range(len(chars)):
+            if self.current_char.lower() == chars[x]:
                 sqrt_str += self.current_char
                 self.advance()
             else:

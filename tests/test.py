@@ -1,8 +1,10 @@
 import unittest
+from itertools import product
+
 from smolcalc.calculator import evaluate
 
 
-class Testsmolcalc(unittest.TestCase):
+class TestSmolcalc(unittest.TestCase):
 
     def test_add(self):
         operator = "+"
@@ -113,14 +115,21 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_ln(self):
-        operator = "ln()"
-        self.assertEqual(evaluate(f"ln(-12)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"ln(0)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"ln(10)"), "2.302585092994046")
-        self.assertEqual(evaluate(f"ln(10-20)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"ln(25.6)"), "3.242592351485517")
-        self.assertEqual(evaluate(f"ln(-25)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"ln()"), "Invalid syntax")
+        operator = "ln" # ln()
+
+        # create version of pi e.g PI Pi pI pi
+        upperchar = list(operator.upper())
+        lowerchar = list(operator.lower())
+        chars = list(zip(upperchar, lowerchar))
+        operators = ["".join(x) for x in product(*chars)]
+
+        self.assertEqual(evaluate(f"{operator}(-12)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(evaluate(f"{operator}(0)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(evaluate(f"{operator}(10)"), "2.302585092994046")
+        self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(evaluate(f"{operator}(25.6)"), "3.242592351485517")
+        self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
+        self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
 
         self.assertEqual(evaluate(f"ln(ln(3))"), "0.0940478276166991")
 
@@ -141,12 +150,21 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_pi(self):
-        operator = "pi"
-        self.assertEqual(evaluate(f"{operator}"), "3.141592653589793")
-        self.assertEqual(evaluate(f"-{operator}"), "-3.141592653589793")
-        self.assertEqual(evaluate(f"{operator}^2"), "9.869604401089358")
-        self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
-        self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
+        operator ="pi"
+
+        # create version of pi e.g PI Pi pI pi
+        upperchar = list( operator.upper())
+        lowerchar = list(operator.lower())
+        chars = list(zip(upperchar,lowerchar))
+        operators = ["".join(x) for x in product(*chars)]
+
+        for operator in operators:
+            self.assertEqual(evaluate(f"{operator}"), "3.141592653589793")
+            self.assertEqual(evaluate(f"-{operator}"), "-3.141592653589793")
+            self.assertEqual(evaluate(f"{operator}^2"), "9.869604401089358")
+            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
+
 
     def test_sqrt(self):
         operator = "sqrt()"
@@ -190,6 +208,7 @@ class Testsmolcalc(unittest.TestCase):
         self.assertEqual(evaluate([34, "wer"]), "function received an argument of wrong type (not string)")
         self.assertEqual(evaluate({34, 3453, 3453, 4, 3}), "function received an argument of wrong type (not string)")
         self.assertEqual(evaluate({"rtt": "lol"}), "function received an argument of wrong type (not string)")
+        self.assertEqual(evaluate("1234+,5",decimal_separator=","),"1234,5")
 
 
 if __name__ == '__main__':
