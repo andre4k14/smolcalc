@@ -117,37 +117,45 @@ class TestSmolcalc(unittest.TestCase):
     def test_ln(self):
         operator = "ln"  # ln()
 
-        # create version of pi e.g PI Pi pI pi
+        # create version of ln e.g lN Ln LN ln
         upperchar = list(operator.upper())
         lowerchar = list(operator.lower())
         chars = list(zip(upperchar, lowerchar))
         operators = ["".join(x) for x in product(*chars)]
 
-        self.assertEqual(evaluate(f"{operator}(-12)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"{operator}(0)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"{operator}(10)"), "2.302585092994046")
-        self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"{operator}(25.6)"), "3.242592351485517")
-        self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
+        for operator in operators:
+            self.assertEqual(evaluate(f"{operator}(-12)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(0)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(10)"), "2.302585092994046")
+            self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(25.6)"), "3.242592351485517")
+            self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
 
-        self.assertEqual(evaluate(f"ln(ln(3))"), "0.0940478276166991")
+            self.assertEqual(evaluate(f"ln(ln(3))"), "0.0940478276166991")
 
-        self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_lg(self):
-        operator = "lg()"
-        self.assertEqual(evaluate(f"lg(-12)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"lg(0)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"lg(10)"), "1")
-        self.assertEqual(evaluate(f"lg(10-20)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"lg(25.6)"), "1.4082399653118496")
-        self.assertEqual(evaluate(f"lg(-25)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"lg()"), "Invalid syntax")
+        operator = "lg" #lg()
 
-        self.assertEqual(evaluate(f"lg(lg(3))"), "-0.3213712361305426")
+        upperchar = list(operator.upper())
+        lowerchar = list(operator.lower())
+        chars = list(zip(upperchar, lowerchar))
+        operators = ["".join(x) for x in product(*chars)]
 
-        self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+        for operator in operators:
+            self.assertEqual(evaluate(f"{operator}(-12)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(0)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(10)"), "1")
+            self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(25.6)"), "1.4082399653118496")
+            self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
+
+            self.assertEqual(evaluate(f"{operator}(lg(3))"), "-0.3213712361305426")
+
+            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_pi(self):
         operator = "pi"
@@ -166,18 +174,25 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
 
     def test_sqrt(self):
-        operator = "sqrt()"
-        self.assertEqual(evaluate(f"sqrt(-12)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"sqrt(0)"), "0")
-        self.assertEqual(evaluate(f"sqrt(10)"), "3.1622776601683795")
-        self.assertEqual(evaluate(f"sqrt(10-20)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"sqrt(25.6)"), "5.059644256269407")
-        self.assertEqual(evaluate(f"sqrt(-25)"), "math domain error (complex numbers not supported)")
-        self.assertEqual(evaluate(f"sqrt(100)"), "10")
+        operator = "sqrt" #sqrt()
 
-        self.assertEqual(evaluate(f"sqrt(sqrt(3))"), "1.3160740129524924")
+        upperchar = list(operator.upper())
+        lowerchar = list(operator.lower())
+        chars = list(zip(upperchar, lowerchar))
+        operators = ["".join(x) for x in product(*chars)]
 
-        self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+        for operator in operators:
+            self.assertEqual(evaluate(f"{operator}(-12)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(0)"), "0")
+            self.assertEqual(evaluate(f"{operator}(10)"), "3.1622776601683795")
+            self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(25.6)"), "5.059644256269407")
+            self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
+            self.assertEqual(evaluate(f"{operator}(100)"), "10")
+
+            self.assertEqual(evaluate(f"{operator}(sqrt(3))"), "1.3160740129524924")
+
+            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_syntx(self):
         self.assertEqual(evaluate(f"( ( ( ( ( (.) ) ) ) ) ) "), "0")
@@ -246,7 +261,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate_all([",1", ".1", ",1", ".1", ",1"], [",", ".", ",", ".", ","]),
                          ["0,1", "0.1", "0,1", "0.1", "0,1"])
 
-        self.assertEqual(evaluate_all([",1", ",1", ",1", ",1", ",1"],","),
+        self.assertEqual(evaluate_all([",1", ",1", ",1", ",1", ",1"], ","),
                          ["0,1", "0,1", "0,1", "0,1", "0,1"])
 
         self.assertEqual(evaluate_all([".1", ".1", ".1", ".1", ".1"], "."),

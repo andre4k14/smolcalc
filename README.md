@@ -11,11 +11,11 @@ pip3 install "git+http://192.168.4.222:9080/andre4k14/calculator.git"
 ```python
 from smolcalc.calculator import evaluate
 
-print(evaluate("1+2*6/67"))
+print(evaluate("1+2*6/67")) 
 ```
 output is
 ```
-1.1791044776119404
+
 ```
 
 

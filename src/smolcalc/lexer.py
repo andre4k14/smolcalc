@@ -126,7 +126,7 @@ class Lexer:
         self.advance()
         chars = ['q', 'r', 't', '(']
         for x in range(len(chars)):
-            if self.current_char.lower() == chars[x]:
+            if self.current_char is not None and self.current_char.lower() == chars[x]:
                 sqrt_str += self.current_char
                 self.advance()
             else:

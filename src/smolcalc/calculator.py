@@ -54,7 +54,7 @@ def evaluate_all(expressions, decimal_separator=None) -> list:
     if not all([True if isinstance(i, str) else False for i in expressions]):
         raise Exception(f"expression in expressions is not type: str")
 
-    if decimal_separator is None or isinstance(decimal_separator, list) or isinstance(decimal_separator,str):
+    if decimal_separator is None or isinstance(decimal_separator, list) or isinstance(decimal_separator, str):
 
         if isinstance(decimal_separator, str):
             decimal_separators = [decimal_separator for x in range(len(expressions))]
@@ -67,7 +67,7 @@ def evaluate_all(expressions, decimal_separator=None) -> list:
             decimal_separators = decimal_separator
 
         if not decimal_separators is None:
-            return [evaluate(e, decimal_separators[i]) for i,e in enumerate(expressions)]
+            return [evaluate(e, decimal_separators[i]) for i, e in enumerate(expressions)]
         else:
             return [evaluate(i) for i in expressions]
 
