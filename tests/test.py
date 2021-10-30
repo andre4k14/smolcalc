@@ -24,6 +24,7 @@ class TestSmolcalc(unittest.TestCase):
         # should return an error message
         self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"++++++++++++++++++++++++++++++++++++++++++++++++++++++++"), "Invalid syntax")
 
     def test_sub(self):
         operator = "-"
@@ -137,7 +138,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_lg(self):
-        operator = "lg" #lg()
+        operator = "lg"  # lg()
 
         upperchar = list(operator.upper())
         lowerchar = list(operator.lower())
@@ -174,7 +175,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
 
     def test_sqrt(self):
-        operator = "sqrt" #sqrt()
+        operator = "sqrt"  # sqrt()
 
         upperchar = list(operator.upper())
         lowerchar = list(operator.lower())
@@ -266,6 +267,7 @@ class TestSmolcalc(unittest.TestCase):
 
         self.assertEqual(evaluate_all([".1", ".1", ".1", ".1", ".1"], "."),
                          ["0.1", "0.1", "0.1", "0.1", "0.1"])
+
 
 
 if __name__ == '__main__':
