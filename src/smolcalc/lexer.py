@@ -34,6 +34,9 @@ class Lexer:
                 yield self.generate_log()
             elif self.current_char.lower() == "s":
                 yield self.generate_sqrt()
+            elif self.current_char.lower() == "e":
+                self.advance()
+                yield Token(TokenType.NUMBER, float("2.718281828459045"))
             elif self.current_char == '!':
                 yield self.generate_factorial()
             elif self.current_char == '^':
@@ -95,7 +98,7 @@ class Lexer:
             self.raise_errors()
 
         if str(pi_str).lower() == 'pi':
-            return Token(TokenType.NUMBER, float('3.141592653589793'))
+            return Token(TokenType.NUMBER, float("3.141592653589793"))
 
     def generate_log(self):
         log_str = self.current_char

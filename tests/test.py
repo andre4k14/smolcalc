@@ -174,6 +174,22 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
 
+    def test_e(self):
+        operator = "e"
+
+        upperchar = list(operator.upper())
+        lowerchar = list(operator.lower())
+        chars = list(zip(upperchar, lowerchar))
+        operators = ["".join(x) for x in product(*chars)]
+
+        for operator in operators:
+            self.assertEqual(evaluate(f"{operator}"), "2.718281828459045")
+            self.assertEqual(evaluate(f"-{operator}"), "-2.718281828459045")
+            self.assertEqual(evaluate(f"{operator}^2"), "7.3890560989306495")
+            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"-{operator}*{operator}"), "-7.3890560989306495")
+            self.assertEqual(evaluate(f"ln({operator})"), "1")
+
     def test_sqrt(self):
         operator = "sqrt"  # sqrt()
 
@@ -204,7 +220,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f" ( ( ( (.) ) ) ) ) "), "Invalid syntax")
         self.assertEqual(evaluate(f"()"), "Invalid syntax")
         self.assertEqual(evaluate(f")("), "Invalid syntax")
-        self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character 'e'")
+        self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character 'q'")
         self.assertEqual(evaluate(f"8/2*(2+2)"), "16")
         self.assertEqual(evaluate(f"(8/2^2*(2+2)^6*8)"), "65536")
         self.assertEqual(evaluate(f"pi^pi^pi^pi"), "math range error")
@@ -267,7 +283,6 @@ class TestSmolcalc(unittest.TestCase):
 
         self.assertEqual(evaluate_all([".1", ".1", ".1", ".1", ".1"], "."),
                          ["0.1", "0.1", "0.1", "0.1", "0.1"])
-
 
 
 if __name__ == '__main__':
