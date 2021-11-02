@@ -4,6 +4,10 @@ import math
 
 
 class Interpreter:
+
+    def __init__(self, special):
+        self.special: bool = special
+
     def visit(self, node):
         method_name = f'visit_{type(node).__name__}'
         method = getattr(self, method_name)
@@ -12,57 +16,58 @@ class Interpreter:
     def raise_error_complex_numbers(self):
         return Exception("math domain error (complex numbers not supported)")
 
-    def visit_NumberNode(self, node):
+    def visit_number_node(self, node):
         return Number(node.value)
 
-    def visit_AddNode(self, node):
+    def visit_add_node(self, node):
         return Number(self.visit(node.node_a).value + self.visit(node.node_b).value)
 
-    def visit_SubtractNode(self, node):
+    def visit_subtract_node(self, node):
         return Number(self.visit(node.node_a).value - self.visit(node.node_b).value)
 
-    def visit_MultiplyNode(self, node):
+    def visit_multiply_node(self, node):
         return Number(self.visit(node.node_a).value * self.visit(node.node_b).value)
 
-    def visit_DivideNode(self, node):
+    def visit_divide_node(self, node):
         try:
             return Number(self.visit(node.node_a).value / self.visit(node.node_b).value)
-        except:
+        except ZeroDivisionError:
             raise Exception("runtime math error (Division by zero)")
 
-    def visit_PlusNode(self, node):
+    def visit_plus_node(self, node):
         return self.visit(node.node)
 
-    def visit_MinusNode(self, node):
+    def visit_minus_node(self, node):
         return Number(-self.visit(node.node).value)
 
-    def visit_ExponentNode(self, node):
+    def visit_exponent_node(self, node):
         if self.visit(node.node_a).value == 0 and self.visit(node.node_a).value == 0:
             raise Exception("0^0 is undefined.")
         return Number(math.pow(self.visit(node.node_a).value, self.visit(node.node_b).value))
 
-    def visit_SquarerootNode(self, node):
+    def visit_square_root_node(self, node):
         if self.visit(node.node).value < 0:
             return self.raise_error_complex_numbers()
 
         return Number(math.pow(self.visit(node.node).value, 0.5))
 
-    def visit_NLOG_Node(self, node):
+    def visit_nlog_node(self, node):
         if self.visit(node.node).value <= 0:
             return self.raise_error_complex_numbers()
 
         return Number(math.log(self.visit(node.node).value))
 
-    def visit_LOG_10_Node(self, node):
+    def visit_log_10_node(self, node):
         if self.visit(node.node).value <= 0:
             return self.raise_error_complex_numbers()
 
         return Number(math.log10(self.visit(node.node).value))
 
-    def visit_FactorialNode(self, node):
-        if not isinstance(self.visit(node.node).value, int) and not self.visit(node.node).value.is_integer():
+    def visit_factorial_node(self, node):
+        if not isinstance(self.visit(node.node).value, int) and not self.visit(
+                node.node).value.is_integer() and not self.special:
             raise Exception("runtime math error (only whole numbers)")
-        if self.visit(node.node).value < 0:
+        if self.visit(node.node).value < 0 and not self.special:
             raise Exception("runtime math error (no negative numbers)")
 
-        return Number(math.factorial(int(self.visit(node.node).value)))
+        return Number(math.gamma(self.visit(node.node).value + 1))

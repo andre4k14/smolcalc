@@ -17,47 +17,47 @@ class Parser:
             self.current_token = None
 
     def parse(self):
-        if self.current_token == None:
+        if self.current_token is None:
             return None
 
         result = self.expr()
 
-        if self.current_token != None:
+        if self.current_token is not None:
             self.raise_error()
         return result
 
     def expr(self):
         result = self.term()
 
-        while self.current_token != None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
+        while self.current_token is not None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
             if self.current_token.type == TokenType.PLUS:
                 self.advance()
-                result = AddNode(result, self.term())
+                result = add_node(result, self.term())
             elif self.current_token.type == TokenType.MINUS:
                 self.advance()
-                result = SubtractNode(result, self.term())
+                result = subtract_node(result, self.term())
 
         return result
 
     def term(self):
         result = self.exponent()
 
-        while self.current_token != None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
+        while self.current_token is not None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
             if self.current_token.type == TokenType.MULTIPLY:
                 self.advance()
-                result = MultiplyNode(result, self.exponent())
+                result = multiply_node(result, self.exponent())
             elif self.current_token.type == TokenType.DIVIDE:
                 self.advance()
-                result = DivideNode(result, self.exponent())
+                result = divide_node(result, self.exponent())
 
         return result
 
     def exponent(self):
         result = self.factor()
 
-        while self.current_token != None and self.current_token.type == TokenType.EXPONENT:
+        while self.current_token is not None and self.current_token.type == TokenType.EXPONENT:
             self.advance()
-            result = ExponentNode(result, self.exponent())
+            result = exponent_node(result, self.exponent())
 
         return result
 
@@ -75,7 +75,7 @@ class Parser:
                 self.raise_error()
 
             self.advance()
-            return SquarerootNode(result)
+            return square_root_node(result)
 
         if token.type == TokenType.NLOG:
             self.advance()
@@ -85,7 +85,7 @@ class Parser:
                 self.raise_error()
 
             self.advance()
-            return NLOG_Node(result)
+            return nlog_node(result)
 
         if token.type == TokenType.LOG_10:
             self.advance()
@@ -95,38 +95,31 @@ class Parser:
                 self.raise_error()
 
             self.advance()
-            return LOG_10_Node(result)
-
-        if token.type == TokenType.FACTORIAL:
-            self.advance()
-            result = self.expr()
-
-            if self.current_token.type != TokenType.RPARPEN:
-                self.raise_error()
-
-            self.advance()
-            return FactorialNode(result)
+            return log_10_node(result)
 
         if token.type == TokenType.LPARPEN:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.RPARPEN:
-                self.raise_error()
+            if self.current_token.type == TokenType.RPARPEN:
+                self.advance()
+                return result
+            elif self.current_token.type == TokenType.FACTORIAL:
+                self.advance()
+                return factorial_node(result)
 
-            self.advance()
-            return result
+            self.raise_error()
 
         elif token.type == TokenType.NUMBER:
             self.advance()
-            return NumberNode(token.value)
+            return number_node(token.value)
 
         elif token.type == TokenType.PLUS:
             self.advance()
-            return PlusNode(self.factor())
+            return plus_node(self.factor())
 
         elif token.type == TokenType.MINUS:
             self.advance()
-            return MinusNode(self.factor())
+            return minus_node(self.factor())
 
         self.raise_error()

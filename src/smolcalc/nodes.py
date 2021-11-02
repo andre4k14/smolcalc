@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class NumberNode:
+class number_node:
     value: float
 
     def __repr__(self):
@@ -10,7 +10,7 @@ class NumberNode:
 
 
 @dataclass
-class AddNode:
+class add_node:
     node_a: any
     node_b: any
 
@@ -19,7 +19,7 @@ class AddNode:
 
 
 @dataclass
-class SubtractNode:
+class subtract_node:
     node_a: any
     node_b: any
 
@@ -28,7 +28,7 @@ class SubtractNode:
 
 
 @dataclass
-class MultiplyNode:
+class multiply_node:
     node_a: any
     node_b: any
 
@@ -37,7 +37,7 @@ class MultiplyNode:
 
 
 @dataclass
-class DivideNode:
+class divide_node:
     node_a: any
     node_b: any
 
@@ -46,7 +46,7 @@ class DivideNode:
 
 
 @dataclass
-class PlusNode:
+class plus_node:
     node: any
 
     def __repr__(self):
@@ -54,7 +54,7 @@ class PlusNode:
 
 
 @dataclass
-class MinusNode:
+class minus_node:
     node: any
 
     def __repr__(self):
@@ -62,7 +62,7 @@ class MinusNode:
 
 
 @dataclass()
-class ExponentNode:
+class exponent_node:
     node_a: any
     node_b: any
 
@@ -71,7 +71,7 @@ class ExponentNode:
 
 
 @dataclass()
-class SquarerootNode:
+class square_root_node:
     node: any
 
     def __repr__(self):
@@ -79,7 +79,7 @@ class SquarerootNode:
 
 
 @dataclass()
-class NLOG_Node:
+class nlog_node:
     node: any
 
     def __repr__(self):
@@ -87,7 +87,7 @@ class NLOG_Node:
 
 
 @dataclass()
-class LOG_10_Node:
+class log_10_node:
     node: any
 
     def __repr__(self):
@@ -95,7 +95,7 @@ class LOG_10_Node:
 
 
 @dataclass()
-class FactorialNode:
+class factorial_node:
     node: any
 
     def __repr__(self):
