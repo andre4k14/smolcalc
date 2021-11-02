@@ -236,7 +236,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"()!()!())!()!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
         self.assertEqual(evaluate(f"(.)!(.)!())!(.)!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
         self.assertEqual(evaluate(f"1!!!!", decimal_separator=",", special=False), "Invalid syntax")
-        self.assertEqual(evaluate(f"", decimal_separator=",", special=True), "")
+        self.assertEqual(evaluate(f",1!1!", decimal_separator=",", special=True), "Invalid syntax")
 
 
     def test_decimal_separator(self):
