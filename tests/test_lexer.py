@@ -1,5 +1,6 @@
 import unittest
 
+from smolcalc import lexer, tokens
 
 class TestLexer(unittest.TestCase):
     def test_something(self):
