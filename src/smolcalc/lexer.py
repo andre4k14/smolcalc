@@ -1,8 +1,9 @@
 from smolcalc.tokens import Token, TokenType
 
-IGNORE = '_'
-WHITESPACE = ' \n\t' + IGNORE
-DIGITS = '0123456789'
+IGNORE = "_"
+WHITESPACE = " \n\t" + IGNORE
+DIGITS = "0123456789"
+OPERATORS = "+-*/^!()"
 
 
 class Lexer:
@@ -18,7 +19,7 @@ class Lexer:
             self.current_char = None
 
     def raise_errors(self):
-        if self.current_char is None:
+        if self.current_char is None or  self.current_char in OPERATORS:
             raise Exception("Invalid syntax")
         raise Exception(f"Illegal character '{self.current_char}'")
 
@@ -27,7 +28,14 @@ class Lexer:
             if self.current_char in WHITESPACE:
                 self.advance()
             elif self.current_char == self.decimal_separator or self.current_char in DIGITS:
-                yield self.generate_number()
+                num = self.generate_number()
+                if self.current_char == '!':
+                    self.advance()
+                    yield Token(TokenType.LPARPEN)
+                    yield num
+                    yield Token(TokenType.FACTORIAL)
+                else:
+                    yield num
             elif self.current_char.lower() == "p":
                 yield self.generate_pi()
             elif self.current_char.lower() == "l":
@@ -37,8 +45,6 @@ class Lexer:
             elif self.current_char.lower() == "e":
                 self.advance()
                 yield Token(TokenType.NUMBER, float("2.718281828459045"))
-            elif self.current_char == '!':
-                yield self.generate_factorial()
             elif self.current_char == '^':
                 self.advance()
                 yield Token(TokenType.EXPONENT)
@@ -59,7 +65,11 @@ class Lexer:
                 yield Token(TokenType.LPARPEN)
             elif self.current_char == ')':
                 self.advance()
-                yield Token(TokenType.RPARPEN)
+                if self.current_char == '!':
+                    self.advance()
+                    yield Token(TokenType.FACTORIAL)
+                else:
+                    yield Token(TokenType.RPARPEN)
             else:
                 self.raise_errors()
 
@@ -138,14 +148,3 @@ class Lexer:
         if str(sqrt_str).lower() == 'sqrt(':
             return Token(TokenType.SQUAREROOT)
 
-    def generate_factorial(self):
-        fac_str = self.current_char
-        self.advance()
-        if self.current_char == '(':
-            fac_str += self.current_char
-            self.advance()
-        else:
-            self.raise_errors()
-
-        if str(fac_str) == '!(':
-            return Token(TokenType.FACTORIAL)

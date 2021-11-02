@@ -3,7 +3,7 @@ from smolcalc.parser_ import Parser
 from smolcalc.interpreter import Interpreter
 
 
-def evaluate(text, decimal_separator=None) -> str:
+def evaluate(text, decimal_separator=None, special=None) -> str:
     """ Method for calculating a math expression in form of a string
 
     :param text: math expression in form of a string
@@ -19,6 +19,13 @@ def evaluate(text, decimal_separator=None) -> str:
         else:
             raise Exception(f"'{decimal_separator}' is not a valid decimal_separator")
 
+        if special is None or not special:
+            special = False
+        elif special:
+            special = True
+        else:
+            raise Exception(f"'{special}' is not a valid special")
+
         if not isinstance(text, str):
             return "function received an argument of wrong type (not string)"
         lexer = Lexer(text, decimal_separator)
@@ -26,7 +33,7 @@ def evaluate(text, decimal_separator=None) -> str:
         parser = Parser(tokens)
         tree = parser.parse()
         if tree:
-            interpreter = Interpreter()
+            interpreter = Interpreter(special)
             value = interpreter.visit(tree)
             value = str(value)
 

@@ -101,19 +101,20 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_fac(self):
-        operator = "!()"
-        self.assertEqual(evaluate(f"!(-12)"), "runtime math error (no negative numbers)")
-        self.assertEqual(evaluate(f"!(0)"), "1")
-        self.assertEqual(evaluate(f"!(10)"), "3628800")
-        self.assertEqual(evaluate(f"!(10-20)"), "runtime math error (no negative numbers)")
-        self.assertEqual(evaluate(f"!(25.6)"), "runtime math error (only whole numbers)")
-        self.assertEqual(evaluate(f"!(-25)"), "runtime math error (no negative numbers)")
-        self.assertEqual(evaluate(f"!()"), "Invalid syntax")
+        operator = "!"
+        self.assertEqual(evaluate(f"(-12){operator}"), "runtime math error (no negative numbers)")
+        self.assertEqual(evaluate(f"0{operator}"), "1")
+        self.assertEqual(evaluate(f"10{operator}"), "3628800")
+        self.assertEqual(evaluate(f"(10-20){operator}"), "runtime math error (no negative numbers)")
+        self.assertEqual(evaluate(f"(25.6){operator}"), "runtime math error (only whole numbers)")
+        self.assertEqual(evaluate(f"(-25){operator}"), "runtime math error (no negative numbers)")
+        self.assertEqual(evaluate(f"(){operator}"), "Invalid syntax")
 
-        self.assertEqual(evaluate(f"!(!(3))"), "720")
+        self.assertEqual(evaluate(f"((3){operator}){operator}"), "720")
 
         self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
-        self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"10.1{operator}", special=True), "4593083.589560013")
+        self.assertEqual(evaluate(f"-10.1{operator}", special=True), "-4593083.589560013")
 
     def test_ln(self):
         operator = "ln"  # ln()
@@ -230,6 +231,13 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"__10_0_00_0_+56_7"), "100567")
         self.assertEqual(evaluate(f"______________________________1________________00"), "100")
         self.assertEqual(evaluate(f"254235_-235"), "254000")
+        self.assertEqual(evaluate(f"254235_-235"), "254000")
+        self.assertEqual(evaluate(f"(12-12)!",decimal_separator=".",special=False),"1")
+        self.assertEqual(evaluate(f"()!()!())!()!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
+        self.assertEqual(evaluate(f"(.)!(.)!())!(.)!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
+        self.assertEqual(evaluate(f"1!!!!", decimal_separator=",", special=False), "Invalid syntax")
+        self.assertEqual(evaluate(f"", decimal_separator=",", special=True), "")
+
 
     def test_decimal_separator(self):
         self.assertEqual(evaluate("1.0"), "1")

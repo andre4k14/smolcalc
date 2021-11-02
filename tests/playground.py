@@ -11,6 +11,8 @@ def cleanup(*args):
 
 
 def main():
+    print(evaluate(f"10.0!"))
+    print(evaluate(f"(-10.0)!"))
     print(evaluate([0, 0]))
     print(evaluate(None))
     print(evaluate("(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"))
