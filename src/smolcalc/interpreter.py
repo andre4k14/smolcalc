@@ -1,5 +1,5 @@
 from smolcalc.values import Number
-from smolcalc.nodes import *
+
 import math
 import operator
 
@@ -65,10 +65,10 @@ class Interpreter:
 
     def visit_log_10_node(self, node):
         value = self.visit(node.node).value
-        if  value <= 0:
+        if value <= 0:
             return self.raise_error_complex_numbers()
 
-        return Number(math.log10( value))
+        return Number(math.log10(value))
 
     def visit_factorial_node(self, node):
         value = self.visit(node.node).value

@@ -19,7 +19,7 @@ class Lexer:
             self.current_char = None
 
     def raise_errors(self):
-        if self.current_char is None or  self.current_char in OPERATORS:
+        if self.current_char is None or self.current_char in OPERATORS:
             raise Exception("Invalid syntax")
         raise Exception(f"Illegal character '{self.current_char}'")
 
@@ -31,7 +31,7 @@ class Lexer:
                 num = self.generate_number()
                 if self.current_char == '!':
                     self.advance()
-                    yield Token(TokenType.LPARPEN)
+                    yield Token(TokenType.L_BRACKET)
                     yield num
                     yield Token(TokenType.FACTORIAL)
                 else:
@@ -62,14 +62,14 @@ class Lexer:
                 yield Token(TokenType.DIVIDE)
             elif self.current_char == '(':
                 self.advance()
-                yield Token(TokenType.LPARPEN)
+                yield Token(TokenType.L_BRACKET)
             elif self.current_char == ')':
                 self.advance()
                 if self.current_char == '!':
                     self.advance()
                     yield Token(TokenType.FACTORIAL)
                 else:
-                    yield Token(TokenType.RPARPEN)
+                    yield Token(TokenType.R_BRACKET)
             else:
                 self.raise_errors()
 
@@ -146,5 +146,4 @@ class Lexer:
                 self.raise_errors()
 
         if str(sqrt_str).lower() == 'sqrt(':
-            return Token(TokenType.SQUAREROOT)
-
+            return Token(TokenType.SQUARE_ROOT)

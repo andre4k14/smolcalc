@@ -29,6 +29,8 @@ def main():
     print(evaluate("lg(10)"))
     print(evaluate(f"10.1sqrt"))
     print(evaluate("-7,1!+7!", special=True , decimal_separator=","))
+    print(evaluate("0,1!", special=True, decimal_separator=","))
+
 
 if __name__ == '__main__':
     signal.signal(signal.SIGINT, cleanup)

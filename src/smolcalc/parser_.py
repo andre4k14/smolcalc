@@ -67,11 +67,11 @@ class Parser:
         if token is None:  # maybe that could be prettier in another version
             self.raise_error()
 
-        if token.type == TokenType.SQUAREROOT:
+        if token.type == TokenType.SQUARE_ROOT:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.RPARPEN:
+            if self.current_token.type != TokenType.R_BRACKET:
                 self.raise_error()
 
             self.advance()
@@ -81,7 +81,7 @@ class Parser:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.RPARPEN:
+            if self.current_token.type != TokenType.R_BRACKET:
                 self.raise_error()
 
             self.advance()
@@ -91,17 +91,17 @@ class Parser:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.RPARPEN:
+            if self.current_token.type != TokenType.R_BRACKET:
                 self.raise_error()
 
             self.advance()
             return log_10_node(result)
 
-        if token.type == TokenType.LPARPEN:
+        if token.type == TokenType.L_BRACKET:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type == TokenType.RPARPEN:
+            if self.current_token.type == TokenType.R_BRACKET:
                 self.advance()
                 return result
             elif self.current_token.type == TokenType.FACTORIAL:
