@@ -1,6 +1,6 @@
 import sys
 import signal
-from smolcalc.calculator import evaluate, evaluate_all
+from smolcalc import evaluate, evaluate_all
 
 sys.setrecursionlimit(5000)
 
