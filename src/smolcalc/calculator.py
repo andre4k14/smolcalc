@@ -3,10 +3,10 @@ from smolcalc.parser_ import Parser
 from smolcalc.interpreter import Interpreter
 
 
-def evaluate(text, decimal_separator=None, special=None) -> str:
+def evaluate(expression, decimal_separator=None, special=None) -> str:
     """ Method for calculating a math expression in form of a string
 
-    :param text: math expression in form of a string
+    :param expression: math expression in form of a string
     :param decimal_separator: decimal separator . or,
     :return: (results or exception) in form of a string
     """
@@ -26,9 +26,9 @@ def evaluate(text, decimal_separator=None, special=None) -> str:
         else:
             raise Exception(f"'{special}' is not a valid special")
 
-        if not isinstance(text, str):
+        if not isinstance(expression, str):
             return "function received an argument of wrong type (not string)"
-        lexer = Lexer(text, decimal_separator)
+        lexer = Lexer(expression, decimal_separator)
         tokens = lexer.generate_tokens()
         parser = Parser(tokens)
         tree = parser.parse()
@@ -47,11 +47,12 @@ def evaluate(text, decimal_separator=None, special=None) -> str:
         return str(e)
 
 
-def evaluate_all(expressions, decimal_separator=None) -> list:
+def evaluate_all(expressions, decimal_separator=None, special_=None) -> list:
     """ Method for calculating multiple math expressions given in form of list of strings (calls method evaluate)
 
     :param expressions: list of strings
     :param decimal_separator: . or , or a list of decimal_separator for every expression
+    :param special_: True or False or a list of decimal_separator for every expression
     :return: list of strings
     """
 
@@ -66,17 +67,28 @@ def evaluate_all(expressions, decimal_separator=None) -> list:
         if isinstance(decimal_separator, str):
             decimal_separators = [decimal_separator for x in range(len(expressions))]
         elif decimal_separator is None:
-            decimal_separators = None
+            decimal_separators = [None for x in range(len(expressions))]
 
         if isinstance(decimal_separator, list):
             if len(decimal_separator) != len(expressions):
                 raise Exception("length decimal_separator list != expressions list")
             decimal_separators = decimal_separator
 
-        if not decimal_separators is None:
-            return [evaluate(e, decimal_separators[i]) for i, e in enumerate(expressions)]
-        else:
-            return [evaluate(i) for i in expressions]
+    if special_ is None or isinstance(special_, list) or isinstance(special_, bool):
+
+        if isinstance(special_, bool):
+            special_list = [special_ for x in range(len(expressions))]
+        elif special_ is None:
+            special_list = [None for x in range(len(expressions))]
+
+        if isinstance(special_, list):
+            if len(special) != len(expressions):
+                raise Exception("length special list != expressions list")
+            special_list = special_
+
+        return [evaluate(expression=e, decimal_separator=decimal_separators[i], special=special_list[i]) for i, e in
+                enumerate(expressions)]
+
 
     else:
         raise Exception("expressions to evaluate not in datatype: list")

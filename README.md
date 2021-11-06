@@ -36,5 +36,5 @@ If you find any errors, inefficient pieces of code or any other problem pls tell
 
 The library uses the standard math lib from python for lg(), ln(), ^, sqrt() and !.
 
-The library is based on this GitHub project:
+The library is based on this GitHub project and video series:
 https://github.com/davidcallanan/py-simple-math-interpreter
