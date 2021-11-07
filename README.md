@@ -3,7 +3,7 @@
 is a small calculator library. to use it simply install smolcalc.
 
 ```bash
-pip3 install "git+https://https://github.com/andre4k14/smolcalc.git"
+pip3 install "git+https://github.com/andre4k14/smolcalc.git"
 ```
 
 ## How to use it. 
