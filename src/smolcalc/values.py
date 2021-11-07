@@ -12,4 +12,3 @@ class Number:
         if not isinstance(self.value, int) and self.value.is_integer() and str(self.value).find("e") == -1:
             return f"{int(self.value)}"
         return f"{self.value}"
-

@@ -1,10 +1,20 @@
 import unittest
 
-from smolcalc import tokens,parser_,nodes
+from smolcalc.tokens import Token, TokenType
+from smolcalc.parser_ import Parser
+from smolcalc.nodes import *
+
 
 class TestParser(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)  # add assertion here
+    def test_empty(self):
+        tokens = []
+        node = Parser(tokens).parse()
+        self.assertEqual(node, None)
+
+    def test_numbers(self):
+        tokens = [Token(TokenType.NUMBER, 123.456)]
+        node = Parser(tokens).parse()
+        self.assertEqual(node, number_node(123.456))
 
 
 if __name__ == '__main__':

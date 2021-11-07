@@ -1,0 +1,1 @@
+from smolcalc.calculator import evaluate,evaluate_all
