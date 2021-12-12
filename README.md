@@ -35,7 +35,7 @@ print(evaluate_all(["1+2*6/67", "1,5+3,5", "lg(10)", "2*(2,7 -1 )", "1_000_000"]
 
 
 
-All possible operators are list in the table below. 
+All possible operators are listed in the table below. 
 
 | operators   | symbole | Syntax  | 
 | :---        | :----:  |:----:   |
