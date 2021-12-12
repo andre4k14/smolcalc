@@ -1,3 +1,5 @@
+from typing import Generator
+
 from smolcalc.tokens import Token, TokenType
 
 IGNORE = "_"
@@ -7,23 +9,23 @@ OPERATORS = "+-*/^!()"
 
 
 class Lexer:
-    def __init__(self, text, decimal_separator):
-        self.decimal_separator = decimal_separator
+    def __init__(self, text: str, decimal_separator: str) -> None:
+        self.decimal_separator: str = decimal_separator
         self.text = iter(text)
         self.advance()
 
-    def advance(self):
+    def advance(self) -> None:
         try:
-            self.current_char = next(self.text)
+            self.current_char: str = next(self.text)
         except StopIteration:
-            self.current_char = None
+            self.current_char = None  # type: ignore
 
-    def raise_errors(self):
+    def raise_errors(self) -> None:
         if self.current_char is None or self.current_char in OPERATORS:
             raise Exception("Invalid syntax")
         raise Exception(f"Illegal character '{self.current_char}'")
 
-    def generate_tokens(self):
+    def generate_tokens(self) -> Generator[Token, None, None]:
         while self.current_char is not None:
             if self.current_char in WHITESPACE:
                 self.advance()
@@ -73,7 +75,7 @@ class Lexer:
             else:
                 self.raise_errors()
 
-    def generate_number(self):
+    def generate_number(self) -> Token:
         number_str = "." if self.current_char == self.decimal_separator else self.current_char
         decimal_separator_count = 0
         if number_str == self.decimal_separator:
@@ -98,22 +100,22 @@ class Lexer:
 
         return Token(TokenType.NUMBER, float(number_str))
 
-    def generate_pi(self):
-        pi_str = self.current_char
+    def generate_pi(self) -> Token:
         self.advance()
         if self.current_char == 'i' or self.current_char == 'I':
-            pi_str += self.current_char
             self.advance()
         else:
             self.raise_errors()
 
-        if str(pi_str).lower() == 'pi':
-            return Token(TokenType.NUMBER, float("3.141592653589793"))
+        return Token(TokenType.NUMBER, float("3.141592653589793"))
 
-    def generate_log(self):
+    def generate_log(self) -> Token:  # type: ignore
         log_str = self.current_char
         self.advance()
-        if self.current_char.lower() == "g":
+
+        if self.current_char is None:
+            self.raise_errors()  # type: ignore
+        elif self.current_char.lower() == "g":
             log_str += self.current_char
             self.advance()
         elif self.current_char.lower() == "n":
@@ -125,25 +127,23 @@ class Lexer:
 
         if self.current_char == '(':
             log_str += self.current_char
-            if str(log_str).lower() == 'ln(':
-                self.advance()
-                return Token(TokenType.NLOG)
-            elif str(log_str).lower() == 'lg(':
-                self.advance()
-                return Token(TokenType.LOG_10)
         else:
             self.raise_errors()
 
-    def generate_sqrt(self):
-        sqrt_str = self.current_char
+        if str(log_str).lower() == 'ln(':
+            self.advance()
+            return Token(TokenType.NLOG)
+        elif str(log_str).lower() == 'lg(':
+            self.advance()
+            return Token(TokenType.LOG_10)
+
+    def generate_sqrt(self) -> Token:
         self.advance()
         chars = ['q', 'r', 't', '(']
         for x in range(len(chars)):
             if self.current_char is not None and self.current_char.lower() == chars[x]:
-                sqrt_str += self.current_char
                 self.advance()
             else:
                 self.raise_errors()
 
-        if str(sqrt_str).lower() == 'sqrt(':
-            return Token(TokenType.SQUARE_ROOT)
+        return Token(TokenType.SQUARE_ROOT)

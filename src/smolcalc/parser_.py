@@ -1,22 +1,30 @@
+from typing import Union
+
 from smolcalc.tokens import TokenType
-from smolcalc.nodes import *
+from smolcalc.nodes import add_node, subtract_node, multiply_node, divide_node, exponent_node, square_root_node, \
+    nlog_node, log_10_node, factorial_node, number_node, plus_node, minus_node
+
+factor_types = Union[square_root_node, nlog_node, log_10_node, factorial_node, number_node, plus_node, minus_node]
+exponent_types = Union[factor_types, exponent_node]
+terms_types = Union[exponent_types, multiply_node, divide_node]
+expr_types = Union[terms_types, add_node, subtract_node]
 
 
 class Parser:
-    def __init__(self, tokens):
+    def __init__(self, tokens) -> None:
         self.tokens = iter(tokens)
         self.advance()
 
-    def raise_error(self):
+    def raise_error(self) -> None:
         raise Exception("Invalid syntax")
 
-    def advance(self):
+    def advance(self) -> None:
         try:
             self.current_token = next(self.tokens)
         except StopIteration:
             self.current_token = None
 
-    def parse(self):
+    def parse(self) -> Union[expr_types, None]:
         if self.current_token is None:
             return None
 
@@ -26,7 +34,7 @@ class Parser:
             self.raise_error()
         return result
 
-    def expr(self):
+    def expr(self) -> expr_types:
         result = self.term()
 
         while self.current_token is not None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
@@ -39,7 +47,7 @@ class Parser:
 
         return result
 
-    def term(self):
+    def term(self) -> expr_types:
         result = self.exponent()
 
         while self.current_token is not None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
@@ -52,7 +60,7 @@ class Parser:
 
         return result
 
-    def exponent(self):
+    def exponent(self) -> expr_types:
         result = self.factor()
 
         while self.current_token is not None and self.current_token.type == TokenType.EXPONENT:
@@ -61,7 +69,7 @@ class Parser:
 
         return result
 
-    def factor(self):
+    def factor(self) -> expr_types:  # type: ignore
         token = self.current_token
 
         if token is None:  # maybe that could be prettier in another version
@@ -71,40 +79,40 @@ class Parser:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.R_BRACKET:
-                self.raise_error()
+            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                self.advance()
+                return square_root_node(result)
 
-            self.advance()
-            return square_root_node(result)
+            self.raise_error()
 
         if token.type == TokenType.NLOG:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.R_BRACKET:
-                self.raise_error()
+            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                self.advance()
+                return nlog_node(result)
 
-            self.advance()
-            return nlog_node(result)
+            self.raise_error()
 
         if token.type == TokenType.LOG_10:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type != TokenType.R_BRACKET:
-                self.raise_error()
+            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                self.advance()
+                return log_10_node(result)
 
-            self.advance()
-            return log_10_node(result)
+            self.raise_error()
 
         if token.type == TokenType.L_BRACKET:
             self.advance()
             result = self.expr()
 
-            if self.current_token.type == TokenType.R_BRACKET:
+            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
                 self.advance()
                 return result
-            elif self.current_token.type == TokenType.FACTORIAL:
+            elif self.current_token is not None and self.current_token.type == TokenType.FACTORIAL:
                 self.advance()
                 return factorial_node(result)
 
