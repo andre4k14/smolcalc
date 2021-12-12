@@ -24,6 +24,10 @@ class TestLexer(unittest.TestCase):
             Token(TokenType.NUMBER, 0.0)
         ])
 
+        tokens = list(Lexer("9.44545.545", decimal_separator=".").generate_tokens())
+        self.assertEqual(tokens, [Token(TokenType.NUMBER, 9.44545),
+                                  Token(TokenType.NUMBER, 0.545)])
+
     def test_const(self):
         tokens = list(Lexer("pi e", decimal_separator=".").generate_tokens())
         self.assertEqual(tokens, [
