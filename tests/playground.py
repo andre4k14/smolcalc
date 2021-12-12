@@ -1,6 +1,6 @@
 import sys
 import signal
-from smolcalc import evaluate, evaluate_all
+from smolcalc import evaluate
 from smolcalc.lexer import Lexer
 
 sys.setrecursionlimit(5000)
