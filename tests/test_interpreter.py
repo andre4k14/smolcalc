@@ -1,3 +1,4 @@
+# flake8: noqa
 import unittest
 
 from smolcalc.nodes import *
@@ -22,7 +23,7 @@ class TestInterpreter(unittest.TestCase):
         self.assertEqual(result.value, 45)
 
         result = Interpreter(False).visit(divide_node(number_node(10), number_node(4.5)))
-        self.assertAlmostEqual(result.value, 2.22222,5)
+        self.assertAlmostEqual(result.value, 2.22222, 5)
 
         with self.assertRaises(Exception):
             Interpreter(False).visit(divide_node(number_node(10), number_node(0)))

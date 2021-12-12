@@ -2,21 +2,18 @@ import sys
 import signal
 import cProfile
 import pstats
-import test
+import test_calc
 import unittest
 
-from smolcalc import evaluate
 
 def cleanup(*args):
     print("The program is stopping")
     sys.exit(0)
 
+
 def test_speed():
-    suite = unittest.TestLoader().loadTestsFromModule(test)
+    suite = unittest.TestLoader().loadTestsFromModule(test_calc)
     unittest.TextTestRunner().run(suite)
-
-
-
 
 
 def main():
@@ -28,9 +25,6 @@ def main():
     stats.print_stats()
 
     stats.dump_stats(filename="speed_text.prof")
-
-
-
 
 
 if __name__ == '__main__':

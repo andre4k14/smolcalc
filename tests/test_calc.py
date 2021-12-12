@@ -1,6 +1,7 @@
-import unittest
+# flake8: noqa
 from itertools import product
-
+import pytest
+import unittest
 from smolcalc import evaluate, evaluate_all
 
 
@@ -8,6 +9,7 @@ class TestSmolcalc(unittest.TestCase):
 
     def test_add(self):
         operator = "+"
+        self.assertEqual(evaluate(f"{operator}5"), "5")
         self.assertEqual(evaluate(f"10{operator}5"), "15")
         self.assertEqual(evaluate(f"10{operator}5.1"), "15.1")
         self.assertEqual(evaluate(f"10{operator}(-5)"), "5")
@@ -28,6 +30,7 @@ class TestSmolcalc(unittest.TestCase):
 
     def test_sub(self):
         operator = "-"
+        self.assertEqual(evaluate(f"{operator}5"), "-5")
         self.assertEqual(evaluate(f"10{operator}5"), "5")
         self.assertEqual(evaluate(f"10{operator}5.1"), "4.9")
         self.assertEqual(evaluate(f"10{operator}(-5)"), "15")
@@ -115,8 +118,10 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"((3){operator}){operator}"), "720")
 
         self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
-        self.assertEqual(evaluate(f"10.1{operator}", special=True), "4593083.589560013")
-        self.assertEqual(evaluate(f"-10.1{operator}", special=True), "-4593083.589560013")
+
+        # gamma func
+        self.assertEqual(evaluate(f"10.1{operator}", special=True), "454760.7514415857")
+        self.assertEqual(evaluate(f"-10.1{operator}", special=True), "-454760.7514415857")
 
     def test_ln(self):
         operator = "ln"  # ln()
@@ -135,10 +140,14 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(25.6)"), "3.242592351485517")
             self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
             self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
 
             self.assertEqual(evaluate(f"ln(ln(3))"), "0.0940478276166991")
 
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+
+        self.assertEqual(evaluate(f"l"), "Invalid syntax")
+        self.assertEqual(evaluate(f"l4"), "Illegal character '4'")
 
     def test_lg(self):
         operator = "lg"  # lg()
@@ -156,6 +165,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(25.6)"), "1.4082399653118496")
             self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
             self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
 
             self.assertEqual(evaluate(f"{operator}(lg(3))"), "-0.3213712361305426")
 
@@ -176,6 +186,9 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}^2"), "9.869604401089358")
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
+
+        self.assertEqual(evaluate(f"p"), "Invalid syntax")
+        self.assertEqual(evaluate(f"p4"), "Illegal character '4'")
 
     def test_e(self):
         operator = "e"
@@ -213,15 +226,19 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(sqrt(3))"), "1.3160740129524924")
 
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
 
     def test_syntx(self):
         self.assertEqual(evaluate(f"( ( ( ( ( (.) ) ) ) ) ) "), "0")
+        self.assertEqual(evaluate(f"+1-1+1-1+1-1+1-1"), "0")
         self.assertEqual(evaluate(f"(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"), "3.20512717698112e-61")
         self.assertEqual(evaluate(f"())()"), "Invalid syntax")
         self.assertEqual(evaluate(f"1+2+3"), "6")
         self.assertEqual(evaluate(f""), "an empty expression cannot be evaluated")
         self.assertEqual(evaluate(f" ( ( ( (.) ) ) ) ) "), "Invalid syntax")
         self.assertEqual(evaluate(f"()"), "Invalid syntax")
+        self.assertEqual(evaluate(f"("), "Invalid syntax")
+        self.assertEqual(evaluate(f"(4"), "Invalid syntax")
         self.assertEqual(evaluate(f")("), "Invalid syntax")
         self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character 'q'")
         self.assertEqual(evaluate(f"8/2*(2+2)"), "16")
@@ -234,35 +251,64 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"______________________________1________________00"), "100")
         self.assertEqual(evaluate(f"254235_-235"), "254000")
         self.assertEqual(evaluate(f"254235_-235"), "254000")
-        self.assertEqual(evaluate(f"(12-12)!",decimal_separator=".",special=False),"1")
+        self.assertEqual(evaluate(f"(12-12)!", decimal_separator=".", special=False), "1")
         self.assertEqual(evaluate(f"()!()!())!()!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
         self.assertEqual(evaluate(f"(.)!(.)!())!(.)!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
         self.assertEqual(evaluate(f"1!!!!", decimal_separator=",", special=False), "Invalid syntax")
         self.assertEqual(evaluate(f",1!1!", decimal_separator=",", special=True), "Invalid syntax")
-
 
     def test_decimal_separator(self):
         self.assertEqual(evaluate("1.0"), "1")
         self.assertEqual(evaluate("1,0"), "Illegal character ','")
         self.assertEqual(evaluate("1,0", decimal_separator=","), "1")
         self.assertEqual(evaluate("1,0", decimal_separator="asdfa"), "'asdfa' is not a valid decimal_separator")
+
+        self.assertEqual(evaluate("1,0", decimal_separator=34.4),
+                         "decimal_separator is type: str, but type was given:<class 'float'>")
+        self.assertEqual(evaluate("1,0", decimal_separator=34),
+                         "decimal_separator is type: str, but type was given:<class 'int'>")
+        self.assertEqual(evaluate("1,0", decimal_separator=[3, 4]),
+                         "decimal_separator is type: str, but type was given:<class 'list'>")
         self.assertEqual(evaluate("1,0", decimal_separator=print),
-                         "'<built-in function print>' is not a valid decimal_separator")
-        self.assertEqual(evaluate("1,0", decimal_separator=34.4), "'34.4' is not a valid decimal_separator")
-        self.assertEqual(evaluate("1,0", decimal_separator=34), "'34' is not a valid decimal_separator")
-        self.assertEqual(evaluate("1,0", decimal_separator=[3, 4]), "'[3, 4]' is not a valid decimal_separator")
+                         "decimal_separator is type: str, but type was given:<class 'builtin_function_or_method'>")
+
+    def test_special_separator(self):
+        self.assertEqual(evaluate("1.0", special=34.4),
+                         "special is type: bool, but type was given:<class 'float'>")
+        self.assertEqual(evaluate("1.0", special=34),
+                         "special is type: bool, but type was given:<class 'int'>")
+        self.assertEqual(evaluate("1.0", special="uzr"),
+                         "special is type: bool, but type was given:<class 'str'>")
+        self.assertEqual(evaluate("1.0", special=[0]),
+                         "special is type: bool, but type was given:<class 'list'>")
+        self.assertEqual(evaluate("1.0", special=bool),
+                         "special is type: bool, but type was given:<class 'type'>")
 
     def test_eval(self):
-        self.assertEqual(evaluate(None), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate(2345345), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate(2345.545), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate(("dfsa", 12)), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate([34, "wer"]), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate({34, 3453, 3453, 4, 3}), "function received an argument of wrong type (not string)")
-        self.assertEqual(evaluate({"rtt": "lol"}), "function received an argument of wrong type (not string)")
+        self.assertEqual(evaluate(None), "expression is type: str, but type was given:<class 'NoneType'>")
+        self.assertEqual(evaluate(2345345), "expression is type: str, but type was given:<class 'int'>")
+        self.assertEqual(evaluate(2345.545), "expression is type: str, but type was given:<class 'float'>")
+        self.assertEqual(evaluate(("dfsa", 12)), "expression is type: str, but type was given:<class 'tuple'>")
+        self.assertEqual(evaluate([34, "wer"]), "expression is type: str, but type was given:<class 'list'>")
+        self.assertEqual(evaluate({34, 3453, 3453, 4, 3}), "expression is type: str, but type was given:<class 'set'>")
+        self.assertEqual(evaluate({"rtt": "lol"}), "expression is type: str, but type was given:<class 'dict'>")
         self.assertEqual(evaluate("1234+,5", decimal_separator=","), "1234,5")
 
     def test_eval_all(self):
+        self.assertEqual(evaluate_all(["4+4"]), ["8"])
+        self.assertEqual(evaluate_all(["4+4"], special=True), ["8"])
+
+        # errors
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all(["4+4"], decimal_separator=7887)
+        self.assertTrue("decimal_separator is type: str, list or NoneType, but type was given:<class 'int'>" in str(
+            context.exception))
+
+        with self.assertRaises(Exception) as context:
+            evaluate_all(["4+4"], special=[])
+        self.assertTrue("length special list != expressions list" in str(context.exception))
+
         with self.assertRaises(Exception) as context:
             evaluate_all(None)
         self.assertTrue("expressions is type: '<class 'NoneType'>' and not type: list" in str(context.exception))
@@ -273,11 +319,13 @@ class TestSmolcalc(unittest.TestCase):
 
         with self.assertRaises(Exception) as context:
             evaluate_all([34534, 3245, 345.56, [], {}, ""])
-        self.assertTrue("expression in expressions is not type: str" in str(context.exception))
+        self.assertTrue(
+            "expression in expressions is type: str, but type was given:<class 'list'>" in str(context.exception))
 
         with self.assertRaises(Exception) as context:
-            evaluate_all([34534, 3245, 345.56, [], {}, ""])
-        self.assertTrue("expression in expressions is not type: str" in str(context.exception))
+            evaluate_all(["1", "1", "1", "1", "1"], special=68)
+        self.assertTrue(
+            "special is type: str, list or NoneType, but type was given:<class 'int'>" in str(context.exception))
 
         with self.assertRaises(Exception) as context:
             evaluate_all(["1", "1", "1", "1", "1"], [",", ".", ",", "."])
@@ -285,8 +333,9 @@ class TestSmolcalc(unittest.TestCase):
 
         self.assertEqual(evaluate_all(["1", "1", "1", "1", "1"], [",", ".", ",", ".", ","]), ["1", "1", "1", "1", "1"])
 
-        self.assertEqual(evaluate_all([",1", ".1", ",1", ".1", ",1"], [",", ".", ",", ".", ","]),
-                         ["0,1", "0.1", "0,1", "0.1", "0,1"])
+        self.assertEqual(
+            evaluate_all([",1", ".1", ",1", ".1", ",1"], [",", ".", ",", ".", ","], [True, True, True, True, False]),
+            ["0,1", "0.1", "0,1", "0.1", "0,1"])
 
         self.assertEqual(evaluate_all([",1", ",1", ",1", ",1", ",1"], ","),
                          ["0,1", "0,1", "0,1", "0,1", "0,1"])
