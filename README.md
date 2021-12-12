@@ -1,5 +1,7 @@
 # Smolcalc,
 
+![Tests](https://github.com/andre4k14/smolcalc/actions/workflows/tests.yml/badge.svg)
+
 This is a small calculator library.
 
 To install it simply copy the command below.
