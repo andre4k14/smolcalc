@@ -4,9 +4,15 @@
 
 This is a small calculator library.
 
-To install it simply copy the command below.
+## Installation
 
 You need python 3.9 or higher.
+
+### Requirements
+
+None
+
+To install it simply copy the command below.
 
 ```bash
 pip3 install "git+https://github.com/andre4k14/smolcalc.git"
@@ -33,24 +39,22 @@ print(evaluate_all(["1+2*6/67", "1,5+3,5", "lg(10)", "2*(2,7 -1 )", "1_000_000"]
 # output => ["1.1791044776119404","5","1","3,4000000000000004","1000000"]
 ```
 
+All possible operators are listed in the table below.
 
-
-All possible operators are listed in the table below. 
-
-| operators   | symbole | Syntax  | 
-| :---        | :----:  |:----:   |
-| Plus      | +   | a+b or +a   |
-| Minus   | -    | a-b or -a  |
-| Multiple      | *   | a*b   |
-| Divide   | /    | a/b  |
-| Parentheses      | ()   | (expression)   |
-| log10   | lg()    | lg(a)   |
-| natural log      | ln()   | ln(a)   |
-| Power   |  ^    | a^b   |
-| PI      | pi   | pi   | 
-| e   | e    | e   | 
-| squareroot      | sqrt()   | sqrt(a)    |
-| factorial   | !    | a! or (expression)!   |
+| operators   | symbole |       syntax        | 
+|:------------|:-------:|:-------------------:|
+| Plus        |    +    |      a+b or +a      |
+| Minus       |    -    |      a-b or -a      |
+| Multiple    |    *    |         a*b         |
+| Divide      |    /    |         a/b         |
+| Parentheses |   ()    |    (expression)     |
+| log10       |  lg()   |        lg(a)        |
+| natural log |  ln()   |        ln(a)        |
+| Power       |    ^    |         a^b         |
+| PI          |   pi    |         pi          | 
+| e           |    e    |          e          | 
+| squareroot  | sqrt()  |       sqrt(a)       |
+| factorial   |    !    | a! or (expression)! |
 
 Factorial uses gamma function if special==True
 
@@ -60,8 +64,6 @@ Order of Operators
 2. Exponents
 3. Multiplication and Division
 4. Addition and Subtraction
-
-
 
 You can use . and , as the decimal_separator.
 
@@ -73,3 +75,24 @@ The library uses the standard math lib from python for lg(), ln(), ^, sqrt() and
 
 The library is based on this GitHub project and video series:
 https://github.com/davidcallanan/py-simple-math-interpreter
+
+## Installation for development
+
+### Requirements
+
+```bash
+pip install -r requirements_dev.txt
+```
+
+Install the package locally
+
+```bash
+pip install -e . 
+```
+
+## Running tests
+
+```bash
+tox
+```
+
