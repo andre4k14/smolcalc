@@ -49,7 +49,7 @@ def evaluate(expression: str, decimal_separator: Optional[str] = None, tab_size:
 
         if tree:
             interpreter = Interpreter(special)
-            value = interpreter.visit(tree)
+            value = interpreter.evaluate(tree)
             str_value: str = str(value)
 
             if decimal_separator == "," and "." in str_value:

@@ -1,13 +1,14 @@
 from typing import Union
 
 from smolcalc.tokens import TokenType
-from smolcalc.nodes import add_node, subtract_node, multiply_node, divide_node, exponent_node, square_root_node, \
-    nlog_node, log_10_node, factorial_node, number_node, plus_node, minus_node
+from smolcalc.nodes import AddNode, SubtractNode, MultiplyNode, DivideNode, ExponentNode, SquareRootNode, \
+    NaturalLogarithmNode, CommonLogarithmNode, FactorialNode, NumberNode, PlusNode, MinusNode
 
-factor_types = Union[square_root_node, nlog_node, log_10_node, factorial_node, number_node, plus_node, minus_node]
-exponent_types = Union[factor_types, exponent_node]
-terms_types = Union[exponent_types, multiply_node, divide_node]
-expr_types = Union[terms_types, add_node, subtract_node]
+factor_types = Union[
+    SquareRootNode, NaturalLogarithmNode, CommonLogarithmNode, FactorialNode, NumberNode, PlusNode, MinusNode]
+exponent_types = Union[factor_types, ExponentNode]
+terms_types = Union[exponent_types, MultiplyNode, DivideNode]
+expr_types = Union[terms_types, AddNode, SubtractNode]
 
 
 class Parser:
@@ -40,10 +41,10 @@ class Parser:
         while self.current_token is not None and self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
             if self.current_token.type == TokenType.PLUS:
                 self.advance()
-                result = add_node(result, self.term())
+                result = AddNode(result, self.term())
             else:
                 self.advance()
-                result = subtract_node(result, self.term())
+                result = SubtractNode(result, self.term())
 
         return result
 
@@ -53,10 +54,10 @@ class Parser:
         while self.current_token is not None and self.current_token.type in (TokenType.MULTIPLY, TokenType.DIVIDE):
             if self.current_token.type == TokenType.MULTIPLY:
                 self.advance()
-                result = multiply_node(result, self.exponent())
+                result = MultiplyNode(result, self.exponent())
             else:
                 self.advance()
-                result = divide_node(result, self.exponent())
+                result = DivideNode(result, self.exponent())
 
         return result
 
@@ -65,7 +66,7 @@ class Parser:
 
         while self.current_token is not None and self.current_token.type == TokenType.EXPONENT:
             self.advance()
-            result = exponent_node(result, self.exponent())
+            result = ExponentNode(result, self.exponent())
 
         return result
 
@@ -81,7 +82,7 @@ class Parser:
 
             if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
                 self.advance()
-                return square_root_node(result)
+                return SquareRootNode(result)
 
             self.raise_error()
 
@@ -91,7 +92,7 @@ class Parser:
 
             if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
                 self.advance()
-                return nlog_node(result)
+                return NaturalLogarithmNode(result)
 
             self.raise_error()
 
@@ -101,7 +102,7 @@ class Parser:
 
             if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
                 self.advance()
-                return log_10_node(result)
+                return CommonLogarithmNode(result)
 
             self.raise_error()
 
@@ -114,20 +115,20 @@ class Parser:
                 return result
             elif self.current_token is not None and self.current_token.type == TokenType.FACTORIAL:
                 self.advance()
-                return factorial_node(result)
+                return FactorialNode(result)
 
             self.raise_error()
 
         elif token.type == TokenType.NUMBER:
             self.advance()
-            return number_node(token.value)
+            return NumberNode(token.value)
 
         elif token.type == TokenType.PLUS:
             self.advance()
-            return plus_node(self.expr())
+            return PlusNode(self.expr())
 
         elif token.type == TokenType.MINUS:
             self.advance()
-            return minus_node(self.expr())
+            return MinusNode(self.expr())
 
         self.raise_error()
