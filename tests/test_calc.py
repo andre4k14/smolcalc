@@ -147,7 +147,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
         self.assertEqual(evaluate(f"l"), "Invalid syntax")
-        self.assertEqual(evaluate(f"l4"), "Illegal character '4'")
+        self.assertEqual(evaluate(f"l4"), "Illegal character at position (Ln:1, Col:2, Pos:2) '4'")
 
     def test_lg(self):
         operator = "lg"  # lg()
@@ -188,7 +188,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
 
         self.assertEqual(evaluate(f"p"), "Invalid syntax")
-        self.assertEqual(evaluate(f"p4"), "Illegal character '4'")
+        self.assertEqual(evaluate(f"p4"), "Illegal character at position (Ln:1, Col:2, Pos:2) '4'")
 
     def test_e(self):
         operator = "e"
@@ -229,7 +229,7 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
 
     def test_syntx(self):
-        self.assertEqual(evaluate(f"( ( ( ( ( (.) ) ) ) ) ) "), "0")
+        self.assertEqual("0", evaluate(f"( ( ( ( ( (.) ) ) ) ) ) "))
         self.assertEqual(evaluate(f"+1-1+1-1+1-1+1-1"), "0")
         self.assertEqual(evaluate(f"(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"), "3.20512717698112e-61")
         self.assertEqual(evaluate(f"())()"), "Invalid syntax")
@@ -240,7 +240,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"("), "Invalid syntax")
         self.assertEqual(evaluate(f"(4"), "Invalid syntax")
         self.assertEqual(evaluate(f")("), "Invalid syntax")
-        self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character 'q'")
+        self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character at position (Ln:1, Col:2, Pos:2) 'q'")
         self.assertEqual(evaluate(f"8/2*(2+2)"), "16")
         self.assertEqual(evaluate(f"(8/2^2*(2+2)^6*8)"), "65536")
         self.assertEqual(evaluate(f"pi^pi^pi^pi"), "math range error")
@@ -259,7 +259,7 @@ class TestSmolcalc(unittest.TestCase):
 
     def test_decimal_separator(self):
         self.assertEqual(evaluate("1.0"), "1")
-        self.assertEqual(evaluate("1,0"), "Illegal character ','")
+        self.assertEqual(evaluate("1,0"), "Illegal character at position (Ln:1, Col:2, Pos:2) ','")
         self.assertEqual(evaluate("1,0", decimal_separator=","), "1")
         self.assertEqual(evaluate("1,0", decimal_separator="asdfa"), "'asdfa' is not a valid decimal_separator")
 
@@ -271,6 +271,13 @@ class TestSmolcalc(unittest.TestCase):
                          "decimal_separator is type: str, but type was given:<class 'list'>")
         self.assertEqual(evaluate("1,0", decimal_separator=print),
                          "decimal_separator is type: str, but type was given:<class 'builtin_function_or_method'>")
+
+    def test_tab_size(self):
+        self.assertEqual(evaluate("1,0", tab_size=print),
+                         "tab_size is type: int, but type was given:<class 'builtin_function_or_method'>")
+
+        self.assertEqual(evaluate("1.0", tab_size=233),"1")
+        self.assertEqual(evaluate("\t1,0", tab_size=3), "Illegal character at position (Ln:1, Col:5, Pos:3) ','")
 
     def test_special_separator(self):
         self.assertEqual(evaluate("1.0", special=34.4),
