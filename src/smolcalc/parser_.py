@@ -124,10 +124,10 @@ class Parser:
 
         elif token.type == TokenType.PLUS:
             self.advance()
-            return plus_node(self.factor())
+            return plus_node(self.expr())
 
         elif token.type == TokenType.MINUS:
             self.advance()
-            return minus_node(self.factor())
+            return minus_node(self.expr())
 
         self.raise_error()
