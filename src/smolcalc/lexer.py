@@ -34,9 +34,12 @@ class Lexer:
         except StopIteration:
             self.current_char = None  # type: ignore
 
-    def raise_errors(self) -> None:
+    def raise_errors(self, error_msg: Optional[str] = None) -> None:
         if self.current_char is None or self.current_char in OPERATORS:
-            raise Exception("Invalid syntax")
+            if error_msg is not None:
+                raise Exception(f"Invalid syntax, ERROR: {error_msg}")
+            else:
+                raise Exception("Invalid syntax")
         raise Exception(
             f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns}, Pos:{self.position_char}) '{self.current_char}'")
 
@@ -120,7 +123,8 @@ class Lexer:
         if self.current_char == 'i' or self.current_char == 'I':
             self.advance()
         else:
-            self.raise_errors()
+            self.raise_errors(f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns},"
+                              f" Pos:{self.position_char}) '{self.current_char}'\nExpected I or i got {self.current_char}")
 
         return Token(TokenType.NUMBER, float("3.141592653589793"))
 
@@ -128,22 +132,21 @@ class Lexer:
         log_str = self.current_char
         self.advance()
 
-        if self.current_char is None:
-            self.raise_errors()  # type: ignore
-        elif self.current_char.lower() == "g":
+        if self.current_char is not None and self.current_char.lower() == "g":
             log_str += self.current_char
             self.advance()
-        elif self.current_char.lower() == "n":
+        elif self.current_char is not None and self.current_char.lower() == "n":
             log_str += self.current_char
             self.advance()
-
         else:
-            self.raise_errors()
+            self.raise_errors(f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns},"
+                              f" Pos:{self.position_char}) '{self.current_char}'\nExpected g or n got {self.current_char}")
 
         if self.current_char == '(':
             log_str += self.current_char
         else:
-            self.raise_errors()
+            self.raise_errors(f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns},"
+                              f" Pos:{self.position_char}) '{self.current_char}'\nExpected ( got {self.current_char}")
 
         if str(log_str).lower() == 'ln(':
             self.advance()
@@ -159,6 +162,7 @@ class Lexer:
             if self.current_char is not None and self.current_char.lower() == chars[x]:
                 self.advance()
             else:
-                self.raise_errors()
+                self.raise_errors(f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns},"
+                                  f" Pos:{self.position_char}) '{self.current_char}'\nExpected {chars[x]} got {self.current_char}")
 
         return Token(TokenType.SQUARE_ROOT)
