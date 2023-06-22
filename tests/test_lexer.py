@@ -7,15 +7,15 @@ from smolcalc.tokens import Token, TokenType
 class TestLexer(unittest.TestCase):
 
     def test_empty(self):
-        tokens = list(Lexer("", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [])
 
     def test_whitespace(self):
-        tokens = list(Lexer("_ \n\t", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("_ \n\t", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [])
 
     def test_numbers(self):
-        tokens = list(Lexer("9 9.5 .9 9. .", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("9 9.5 .9 9. .", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [
             Token(TokenType.NUMBER, 9.0),
             Token(TokenType.NUMBER, 9.5),
@@ -24,19 +24,19 @@ class TestLexer(unittest.TestCase):
             Token(TokenType.NUMBER, 0.0)
         ])
 
-        tokens = list(Lexer("9.44545.545", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("9.44545.545", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [Token(TokenType.NUMBER, 9.44545),
                                   Token(TokenType.NUMBER, 0.545)])
 
     def test_const(self):
-        tokens = list(Lexer("pi e", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("pi e", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [
             Token(TokenType.NUMBER, 3.141592653589793),
             Token(TokenType.NUMBER, 2.718281828459045)
         ])
 
     def test_operators(self):
-        tokens = list(Lexer("+ - * / ^ ln( lg( sqrt( )! ( )", decimal_separator=".").generate_tokens())
+        tokens = list(Lexer("+ - * / ^ ln( lg( sqrt( )! ( )", decimal_separator=".",tab_size=5).generate_tokens())
         self.assertEqual(tokens, [
             Token(TokenType.PLUS),
             Token(TokenType.MINUS),
