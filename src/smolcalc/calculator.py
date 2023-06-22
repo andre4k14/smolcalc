@@ -5,12 +5,14 @@ from smolcalc.parser_ import Parser
 from smolcalc.interpreter import Interpreter
 
 
-def evaluate(expression: str, decimal_separator: Optional[str] = None, special: Optional[bool] = None) -> str:
+def evaluate(expression: str, decimal_separator: Optional[str] = None, tab_size: Optional[int] = None,
+             special: Optional[bool] = None) -> str:
     """ function for calculating a math expression in form of a string
 
     :param special: bool if True factorial uses the gamma function
     :param expression: math expression in form of a string
     :param decimal_separator: decimal separator . or,
+    :param tab_size: int defines the size of a tab symbol
     :return: (results or exception) in form of a string
     """
 
@@ -20,6 +22,9 @@ def evaluate(expression: str, decimal_separator: Optional[str] = None, special: 
 
         if not (isinstance(decimal_separator, str) or decimal_separator is None):
             raise TypeError(f"decimal_separator is type: str, but type was given:{type(decimal_separator)}")
+
+        if not (isinstance(tab_size, int) or tab_size is None):
+            raise TypeError(f"tab_size is type: int, but type was given:{type(tab_size)}")
 
         if not (isinstance(special, bool) or special is None):
             raise TypeError(f"special is type: bool, but type was given:{type(special)}")
@@ -31,10 +36,13 @@ def evaluate(expression: str, decimal_separator: Optional[str] = None, special: 
         else:
             raise ValueError(f"'{decimal_separator}' is not a valid decimal_separator")
 
+        if tab_size is None:
+            tab_size = 5
+
         if special is None:
             special = False
 
-        lexer = Lexer(expression, decimal_separator)
+        lexer = Lexer(expression, decimal_separator, tab_size)
         tokens = lexer.generate_tokens()
         parser = Parser(tokens)
         tree = parser.parse()
