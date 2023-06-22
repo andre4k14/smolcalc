@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, Optional
 
 from smolcalc.tokens import Token, TokenType
 
@@ -9,21 +9,36 @@ OPERATORS = "+-*/^!()"
 
 
 class Lexer:
-    def __init__(self, text: str, decimal_separator: str) -> None:
+    def __init__(self, text: str, decimal_separator: str, tab_size: int) -> None:
         self.decimal_separator: str = decimal_separator
+        self.tab_size = tab_size
         self.text = iter(text)
+        self.position_char: int = 0
+        self.count_columns: int = 0
+        self.count_lines: int = 1
         self.advance()
 
     def advance(self) -> None:
         try:
             self.current_char: str = next(self.text)
+            self.position_char += 1
+            self.count_columns += 1
+            if self.current_char in WHITESPACE:
+                if self.current_char == "\n":
+                    self.count_columns = 0
+                    self.count_lines += 1
+
+                if self.current_char == "\t":
+                    self.count_columns += (self.tab_size - 1)
+
         except StopIteration:
             self.current_char = None  # type: ignore
 
     def raise_errors(self) -> None:
         if self.current_char is None or self.current_char in OPERATORS:
             raise Exception("Invalid syntax")
-        raise Exception(f"Illegal character '{self.current_char}'")
+        raise Exception(
+            f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns}, Pos:{self.position_char}) '{self.current_char}'")
 
     def generate_tokens(self) -> Generator[Token, None, None]:
         while self.current_char is not None:
@@ -133,7 +148,7 @@ class Lexer:
         if str(log_str).lower() == 'ln(':
             self.advance()
             return Token(TokenType.NLOG)
-        elif str(log_str).lower() == 'lg(':
+        else:
             self.advance()
             return Token(TokenType.LOG_10)
 
