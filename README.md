@@ -90,9 +90,28 @@ Install the package locally
 pip install -e . 
 ```
 
-## Running tests
+### tests
+
+```bash
+pytest
+```
+
+### linter
+
+```bash
+flake8 src
+```
+
+### static type checker
+
+```bash
+mypy src
+```
+
+### Running all tests for multiple python version
 
 ```bash
 tox
 ```
+
 
