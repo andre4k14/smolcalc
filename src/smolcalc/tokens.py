@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 
 from enum import Enum
 from dataclasses import dataclass
@@ -22,7 +22,7 @@ class TokenType(Enum):
 @dataclass
 class Token:
     type: TokenType
-    value: Union[float, None] = None
+    value: Optional[float] = None
 
     def __repr__(self):
         return self.type.name + (f":{self.value}" if self.value is not None else "")

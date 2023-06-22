@@ -53,7 +53,7 @@ All possible operators are listed in the table below.
 | Power       |    ^    |         a^b         |
 | PI          |   pi    |         pi          | 
 | e           |    e    |          e          | 
-| squareroot  | sqrt()  |       sqrt(a)       |
+| square root | sqrt()  |       sqrt(a)       |
 | factorial   |    !    | a! or (expression)! |
 
 Factorial uses gamma function if special==True
