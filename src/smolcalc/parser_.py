@@ -41,7 +41,7 @@ class Parser:
             if self.current_token.type == TokenType.PLUS:
                 self.advance()
                 result = add_node(result, self.term())
-            elif self.current_token.type == TokenType.MINUS:
+            else:
                 self.advance()
                 result = subtract_node(result, self.term())
 
@@ -54,7 +54,7 @@ class Parser:
             if self.current_token.type == TokenType.MULTIPLY:
                 self.advance()
                 result = multiply_node(result, self.exponent())
-            elif self.current_token.type == TokenType.DIVIDE:
+            else:
                 self.advance()
                 result = divide_node(result, self.exponent())
 
