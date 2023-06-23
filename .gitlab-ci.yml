@@ -1,0 +1,22 @@
+before_script:
+  - apt update && apt upgrade -y
+flake8:
+  image: python:3.9
+  script:
+    - tox -e flake8
+mypy:
+  image: python:3.9
+  script:
+    - tox -e mypy
+test:39:
+  image: python:3.9
+  script:
+    - tox -e py39,flake8,mypy
+test:310:
+  image: python:3.10
+  script:
+    - tox -e py310
+test:311:
+  image: python:3.11
+  script:
+    - tox -e py311
