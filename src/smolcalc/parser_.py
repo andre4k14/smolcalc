@@ -1,6 +1,6 @@
-from typing import Union
+from typing import Union, Optional, Generator
 
-from smolcalc.tokens import TokenType
+from smolcalc.tokens import TokenType, Token, tokens_to_string
 from smolcalc.nodes import AddNode, SubtractNode, MultiplyNode, DivideNode, ExponentNode, SquareRootNode, \
     NaturalLogarithmNode, CommonLogarithmNode, FactorialNode, NumberNode, PlusNode, MinusNode
 
@@ -12,12 +12,18 @@ expr_types = Union[terms_types, AddNode, SubtractNode]
 
 
 class Parser:
-    def __init__(self, tokens) -> None:
+    def __init__(self, tokens: Generator[Optional[Token], None, None]) -> None:
         self.tokens = iter(tokens)
         self.advance()
 
-    def raise_error(self) -> None:
-        raise Exception("Invalid syntax")
+    def raise_error(self, error_msg: Optional[str] = None) -> None:
+        if error_msg is not None:
+            raise Exception(f"Invalid syntax, ERROR: {error_msg}")
+        else:
+            raise Exception("Invalid syntax")
+
+    def raise_r_bracket_error(self) -> None:
+        self.raise_error(f"Expected {tokens_to_string[TokenType.R_BRACKET]} got {None}")
 
     def advance(self) -> None:
         try:
@@ -62,11 +68,20 @@ class Parser:
         return result
 
     def exponent(self) -> expr_types:
-        result = self.factor()
+        result = self.factorial()
 
         while self.current_token is not None and self.current_token.type == TokenType.EXPONENT:
             self.advance()
             result = ExponentNode(result, self.exponent())
+
+        return result
+
+    def factorial(self) -> expr_types:
+        result = self.factor()
+
+        while self.current_token is not None and self.current_token.type == TokenType.FACTORIAL:
+            self.advance()
+            result = FactorialNode(result)
 
         return result
 
@@ -75,60 +90,58 @@ class Parser:
 
         if token is None:  # maybe that could be prettier in another version
             self.raise_error()
+        else:  # because mypy doesn't know that if token is None the rest of the code doesn't execute
 
-        if token.type == TokenType.SQUARE_ROOT:
-            self.advance()
-            result = self.expr()
-
-            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+            if token.type == TokenType.SQUARE_ROOT:
                 self.advance()
-                return SquareRootNode(result)
+                result = self.expr()
 
-            self.raise_error()
+                if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                    self.advance()
+                    return SquareRootNode(result)
 
-        if token.type == TokenType.NLOG:
-            self.advance()
-            result = self.expr()
+                self.raise_r_bracket_error()
 
-            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+            if token.type == TokenType.NLOG:
                 self.advance()
-                return NaturalLogarithmNode(result)
+                result = self.expr()
 
-            self.raise_error()
+                if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                    self.advance()
+                    return NaturalLogarithmNode(result)
 
-        if token.type == TokenType.LOG_10:
-            self.advance()
-            result = self.expr()
+                self.raise_r_bracket_error()
 
-            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+            if token.type == TokenType.LOG_10:
                 self.advance()
-                return CommonLogarithmNode(result)
+                result = self.expr()
 
-            self.raise_error()
+                if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                    self.advance()
+                    return CommonLogarithmNode(result)
 
-        if token.type == TokenType.L_BRACKET:
-            self.advance()
-            result = self.expr()
+                self.raise_r_bracket_error()
 
-            if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+            if token.type == TokenType.L_BRACKET:
                 self.advance()
-                return result
-            elif self.current_token is not None and self.current_token.type == TokenType.FACTORIAL:
+                result = self.expr()
+
+                if self.current_token is not None and self.current_token.type == TokenType.R_BRACKET:
+                    self.advance()
+                    return result
+
+                self.raise_r_bracket_error()
+
+            elif token.type == TokenType.NUMBER:
                 self.advance()
-                return FactorialNode(result)
+                return NumberNode(token.value)  # type: ignore
 
-            self.raise_error()
+            elif token.type == TokenType.PLUS:
+                self.advance()
+                return PlusNode(self.expr())
 
-        elif token.type == TokenType.NUMBER:
-            self.advance()
-            return NumberNode(token.value)
+            elif token.type == TokenType.MINUS:
+                self.advance()
+                return MinusNode(self.expr())
 
-        elif token.type == TokenType.PLUS:
-            self.advance()
-            return PlusNode(self.expr())
-
-        elif token.type == TokenType.MINUS:
-            self.advance()
-            return MinusNode(self.expr())
-
-        self.raise_error()
+            self.raise_error(f"Unexpected character '{tokens_to_string[token.type]}'")
