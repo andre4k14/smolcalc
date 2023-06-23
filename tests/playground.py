@@ -14,22 +14,25 @@ def cleanup(*args):
 
 
 def run_and_print(exp: str) -> None:
-    print(f"Input: {exp}")
-    lexer = Lexer(exp, ".", 1)
-    tokens = list(lexer.generate_tokens())
-    print(f"Tokens: {tokens}")
-    parser = Parser(tokens)
-    tree = parser.parse()
-    print(f"Tree: {tree}")
+    try:
+        print(f"Input: {exp}")
+        lexer = Lexer(exp, ".", 1)
+        tokens = list(lexer.generate_tokens())
+        print(f"Tokens: {tokens}")
+        parser = Parser(tokens)
+        tree = parser.parse()
+        print(f"Tree: {tree}")
 
-    if tree:
-        interpreter = Interpreter(False)
-        value = interpreter.evaluate(tree)
-        print(f"Result: {value}\n")
+        if tree:
+            interpreter = Interpreter(False)
+            value = interpreter.evaluate(tree)
+            print(f"Result: {value}\n")
+    except Exception as e:  # change
+        print(e)
 
 
 def main():
-    run_and_print("")
+    run_and_print("34.0*3(we r _34t")
     run_and_print(")!")
     run_and_print("5!")
     run_and_print("5!!")
