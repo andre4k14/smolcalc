@@ -41,29 +41,35 @@ print(evaluate_all(["1+2*6/67", "1,5+3,5", "lg(10)", "2*(2,7 -1 )", "1_000_000"]
 
 All possible operators are listed in the table below.
 
-| operators   | symbole |       syntax        | 
-|:------------|:-------:|:-------------------:|
-| Plus        |    +    |      a+b or +a      |
-| Minus       |    -    |      a-b or -a      |
-| Multiple    |    *    |         a*b         |
-| Divide      |    /    |         a/b         |
-| Parentheses |   ()    |    (expression)     |
-| log10       |  lg()   |        lg(a)        |
-| natural log |  ln()   |        ln(a)        |
-| Power       |    ^    |         a^b         |
-| PI          |   pi    |         pi          | 
-| e           |    e    |          e          | 
-| square root | sqrt()  |       sqrt(a)       |
-| factorial   |    !    | a! or (expression)! |
+| operators         | symbole |    syntax    | 
+|:------------------|:-------:|:------------:|
+| plus              |    +    |  a+b or +a   |
+| minus             |    -    |  a-b or -a   |
+| multiple          |    *    |     a*b      |
+| divide            |    /    |     a/b      |
+| parentheses       |   ()    | (expression) |
+| common logarithm  |  lg()   |    lg(a)     |
+| natural logarithm |  ln()   |    ln(a)     |
+| power             |    ^    |     a^b      |
+| square root       | sqrt()  |   sqrt(a)    |
+| factorial         |    !    |      a!      |
+
+All possible constants are listed in the table below.
+
+| constants      | symbole |
+|:---------------|:-------:|
+| Pi             |   pi    |
+| euler's number |    e    |
 
 Factorial uses gamma function if special==True
 
 Order of Operators
 
-1. Parentheses
-2. Exponents
-3. Multiplication and Division
-4. Addition and Subtraction
+1. parentheses
+2. factorial
+3. exponents
+4. multiplication and division
+5. addition and subtraction
 
 You can use . and , as the decimal_separator.
 

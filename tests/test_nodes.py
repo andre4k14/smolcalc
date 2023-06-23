@@ -1,52 +1,49 @@
 import unittest
 
-from smolcalc.nodes import add_node, subtract_node, multiply_node, divide_node, exponent_node, square_root_node, \
-    nlog_node, log_10_node, factorial_node, number_node, plus_node, minus_node
+from smolcalc.nodes import AddNode, SubtractNode, MultiplyNode, DivideNode, ExponentNode, SquareRootNode, \
+    NaturalLogarithmNode, CommonLogarithmNode, FactorialNode, NumberNode, PlusNode, MinusNode
 
 
 class TestNodes(unittest.TestCase):
     def test_repr(self):
-        node = number_node(34)
-        self.assertEqual(repr(node), "34")
+        node = NumberNode(34)
+        self.assertEqual("34", repr(node))
 
-        node = add_node(34, 1)
-        self.assertEqual(repr(node), "(34+1)")
+        node = AddNode(NumberNode(34), NumberNode(1))
+        self.assertEqual("(34+1)", repr(node))
 
-        node = add_node(add_node(34, 1), 1)
-        self.assertEqual(repr(node), "((34+1)+1)")
+        node = AddNode(AddNode(NumberNode(34), NumberNode(1)), NumberNode(1))
+        self.assertEqual("((34+1)+1)", repr(node))
 
-        node = subtract_node(34, 1)
-        self.assertEqual(repr(node), "(34-1)")
+        node = SubtractNode(NumberNode(34), NumberNode(1))
+        self.assertEqual("(34-1)", repr(node))
 
-        node = multiply_node(34, -1)
-        self.assertEqual(repr(node), "(34*-1)")
+        node = MultiplyNode(NumberNode(34), NumberNode(-1))
+        self.assertEqual("(34*-1)", repr(node))
 
-        node = divide_node(34, -1)
-        self.assertEqual(repr(node), "(34/-1)")
+        node = DivideNode(NumberNode(34), NumberNode(-1))
+        self.assertEqual("(34/-1)", repr(node))
 
-        node = exponent_node(34, -1)
-        self.assertEqual(repr(node), "(power(34,-1))")
+        node = ExponentNode(NumberNode(34), NumberNode(-1))
+        self.assertEqual("(power(34,-1))", repr(node))
 
-        node = square_root_node(34)
-        self.assertEqual(repr(node), "(power(34,0.5))")
+        node = SquareRootNode(NumberNode(34))
+        self.assertEqual("(power(34,0.5))", repr(node))
 
-        node = nlog_node(34)
-        self.assertEqual(repr(node), "(log(34))")
+        node = NaturalLogarithmNode(NumberNode(34))
+        self.assertEqual("(ln(34))", repr(node))
 
-        node = log_10_node(34)
-        self.assertEqual(repr(node), "(log10(34))")
+        node = CommonLogarithmNode(NumberNode(34))
+        self.assertEqual("(lg(34))", repr(node))
 
-        node = factorial_node(34)
-        self.assertEqual(repr(node), "(factorial(34))")
+        node = FactorialNode(NumberNode(34))
+        self.assertEqual("(factorial(34))", repr(node))
 
-        node = minus_node(34)
-        self.assertEqual(repr(node), "(-34)")
+        node = MinusNode(NumberNode(34))
+        self.assertEqual("(-34)", repr(node))
 
-        node = plus_node(34)
-        self.assertEqual(repr(node), "(+34)")
-
-        node = plus_node(number_node(34))
-        self.assertEqual(repr(node), "(+34)")
+        node = PlusNode(NumberNode(34))
+        self.assertEqual("(+34)", repr(node))
 
 
 if __name__ == '__main__':

@@ -14,8 +14,7 @@ def raise_error_complex_numbers() -> None:
 
 class Expression(ABC):
     @abstractmethod
-    def evaluate(self, **x_para) -> Number:
-        """Load in the data set"""
+    def evaluate(self, **x_para) -> Number:  # pragma: no cover
         raise NotImplementedError
 
 

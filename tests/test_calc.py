@@ -59,12 +59,12 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "-501")
         self.assertEqual(evaluate(f"0.0{operator}0"), "0")
 
-        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax, ERROR: Unexpected character '*'")
+        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax, ERROR: Unexpected character '*'")
+        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax, ERROR: Unexpected character '*'")
 
         # should return an error message
-        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax, ERROR: Unexpected character '*'")
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_div(self):
@@ -77,19 +77,21 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "-0.1996007984031936")
         self.assertEqual(evaluate(f"0.0{operator}0"), "runtime math error (Division by zero)")
 
-        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax, ERROR: Unexpected character '/'")
+        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax, ERROR: Unexpected character '/'")
+        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax, ERROR: Unexpected character '/'")
 
         # should return an error message
-        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax, ERROR: Unexpected character '/'")
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_pow(self):
         operator = "^"
         self.assertEqual(evaluate(f"10{operator}5"), "100000")
         self.assertEqual(evaluate(f"10{operator}5.1"), "125892.54117941661")
-        self.assertEqual(evaluate(f"10{operator}(-5)"), "1e-05")
+        self.assertEqual(evaluate(f"-8{operator}2"), "-64")
+        self.assertEqual(evaluate(f"(-8){operator}2"), "64")
+        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax, ERROR: Unexpected character '^'")
         self.assertEqual(evaluate(f"10{operator}(+50)"), "1e+50")
         self.assertEqual(evaluate(f"10{operator}(-50)"), "1e-50")
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "7.943282347242789e-51")
@@ -97,12 +99,12 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"0.0{operator}123123"), "0")
         self.assertEqual(evaluate(f"2{operator}2{operator}2{operator}2"), "65536")
 
-        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax")
-        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}."), "Invalid syntax, ERROR: Unexpected character '^'")
+        self.assertEqual(evaluate(f"{operator}(.)"), "Invalid syntax, ERROR: Unexpected character '^'")
+        self.assertEqual(evaluate(f"{operator}(-(.))"), "Invalid syntax, ERROR: Unexpected character '^'")
 
         # should return an error message
-        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax, ERROR: Unexpected character '^'")
         self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
 
     def test_fac(self):
@@ -113,11 +115,11 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"(10-20){operator}"), "runtime math error (no negative numbers)")
         self.assertEqual(evaluate(f"(25.6){operator}"), "runtime math error (only whole numbers)")
         self.assertEqual(evaluate(f"(-25){operator}"), "runtime math error (no negative numbers)")
-        self.assertEqual(evaluate(f"(){operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"(){operator}"), "Invalid syntax, ERROR: Unexpected character ')'")
 
         self.assertEqual(evaluate(f"((3){operator}){operator}"), "720")
 
-        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax")
+        self.assertEqual(evaluate(f"{operator}"), "Invalid syntax, ERROR: Unexpected character '!'")
 
         # gamma func
         self.assertEqual(evaluate(f"10.1{operator}", special=True), "454760.7514415857")
@@ -139,14 +141,16 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
             self.assertEqual(evaluate(f"{operator}(25.6)"), "3.242592351485517")
             self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
-            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
-            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
+            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax, ERROR: Unexpected character ')'")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax, ERROR: Expected ) got None")
 
             self.assertEqual(evaluate(f"ln(ln(3))"), "0.0940478276166991")
 
-            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"10.1{operator}"),
+                             "Invalid syntax, ERROR: Illegal character at position (Ln:1, Col:6, Pos:6) 'None'\nExpected ( got None")
 
-        self.assertEqual(evaluate(f"l"), "Invalid syntax")
+        self.assertEqual(evaluate(f"l"),
+                         "Invalid syntax, ERROR: Illegal character at position (Ln:1, Col:1, Pos:1) 'None'\nExpected g or n got None")
         self.assertEqual(evaluate(f"l4"), "Illegal character at position (Ln:1, Col:2, Pos:2) '4'")
 
     def test_lg(self):
@@ -164,12 +168,13 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"{operator}(10-20)"), "math domain error (complex numbers not supported)")
             self.assertEqual(evaluate(f"{operator}(25.6)"), "1.4082399653118496")
             self.assertEqual(evaluate(f"{operator}(-25)"), "math domain error (complex numbers not supported)")
-            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax")
-            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
+            self.assertEqual(evaluate(f"{operator}()"), "Invalid syntax, ERROR: Unexpected character ')'")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax, ERROR: Expected ) got None")
 
             self.assertEqual(evaluate(f"{operator}(lg(3))"), "-0.3213712361305426")
 
-            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
+            self.assertEqual(evaluate(f"10.1{operator}"),
+                             "Invalid syntax, ERROR: Illegal character at position (Ln:1, Col:6, Pos:6) 'None'\nExpected ( got None")
 
     def test_pi(self):
         operator = "pi"
@@ -187,7 +192,8 @@ class TestSmolcalc(unittest.TestCase):
             self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
             self.assertEqual(evaluate(f"-{operator}*{operator}"), "-9.869604401089358")
 
-        self.assertEqual(evaluate(f"p"), "Invalid syntax")
+        self.assertEqual(evaluate(f"p"),
+                         "Invalid syntax, ERROR: Illegal character at position (Ln:1, Col:1, Pos:1) 'None'\nExpected I or i got None")
         self.assertEqual(evaluate(f"p4"), "Illegal character at position (Ln:1, Col:2, Pos:2) '4'")
 
     def test_e(self):
@@ -225,21 +231,22 @@ class TestSmolcalc(unittest.TestCase):
 
             self.assertEqual(evaluate(f"{operator}(sqrt(3))"), "1.3160740129524924")
 
-            self.assertEqual(evaluate(f"10.1{operator}"), "Invalid syntax")
-            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax")
+            self.assertEqual(evaluate(f"10.1{operator}"),
+                             "Invalid syntax, ERROR: Illegal character at position (Ln:1, Col:8, Pos:8) 'None'\nExpected ( got None")
+            self.assertEqual(evaluate(f"{operator}(5"), "Invalid syntax, ERROR: Expected ) got None")
 
     def test_syntx(self):
         self.assertEqual("0", evaluate(f"( ( ( ( ( (.) ) ) ) ) ) "))
         self.assertEqual(evaluate(f"+1-1+1-1+1-1+1-1"), "0")
         self.assertEqual(evaluate(f"(((2+3)*(6-5))^((-pi)*23-(43*0.5)+6)*7)"), "3.20512717698112e-61")
-        self.assertEqual(evaluate(f"())()"), "Invalid syntax")
+        self.assertEqual("Invalid syntax, ERROR: Unexpected character ')'", evaluate(f"())()"))
         self.assertEqual(evaluate(f"1+2+3"), "6")
         self.assertEqual(evaluate(f""), "an empty expression cannot be evaluated")
         self.assertEqual(evaluate(f" ( ( ( (.) ) ) ) ) "), "Invalid syntax")
-        self.assertEqual(evaluate(f"()"), "Invalid syntax")
+        self.assertEqual(evaluate(f"()"), "Invalid syntax, ERROR: Unexpected character ')'")
         self.assertEqual(evaluate(f"("), "Invalid syntax")
-        self.assertEqual(evaluate(f"(4"), "Invalid syntax")
-        self.assertEqual(evaluate(f")("), "Invalid syntax")
+        self.assertEqual(evaluate(f"(4"), "Invalid syntax, ERROR: Expected ) got None")
+        self.assertEqual(evaluate(f")("), "Invalid syntax, ERROR: Unexpected character ')'")
         self.assertEqual(evaluate(f"eqwrrzuitttfh"), "Illegal character at position (Ln:1, Col:2, Pos:2) 'q'")
         self.assertEqual(evaluate(f"8/2*(2+2)"), "16")
         self.assertEqual(evaluate(f"(8/2^2*(2+2)^6*8)"), "65536")
@@ -252,9 +259,11 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"254235_-235"), "254000")
         self.assertEqual(evaluate(f"254235_-235"), "254000")
         self.assertEqual(evaluate(f"(12-12)!", decimal_separator=".", special=False), "1")
-        self.assertEqual(evaluate(f"()!()!())!()!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
-        self.assertEqual(evaluate(f"(.)!(.)!())!(.)!()!!)!))", decimal_separator=".", special=True), "Invalid syntax")
-        self.assertEqual(evaluate(f"1!!!!", decimal_separator=",", special=False), "Invalid syntax")
+        self.assertEqual(evaluate(f"()!()!())!()!()!!)!))", decimal_separator=".", special=True),
+                         "Invalid syntax, ERROR: Unexpected character ')'")
+        self.assertEqual(evaluate(f"(.)!(.)!())!(.)!()!!)!))", decimal_separator=".", special=True),
+                         "Invalid syntax")
+        self.assertEqual(evaluate(f"1!!!!", decimal_separator=",", special=False), "1")
         self.assertEqual(evaluate(f",1!1!", decimal_separator=",", special=True), "Invalid syntax")
 
     def test_decimal_separator(self):
@@ -276,7 +285,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate("1,0", tab_size=print),
                          "tab_size is type: int, but type was given:<class 'builtin_function_or_method'>")
 
-        self.assertEqual(evaluate("1.0", tab_size=233),"1")
+        self.assertEqual(evaluate("1.0", tab_size=233), "1")
         self.assertEqual(evaluate("\t1,0", tab_size=3), "Illegal character at position (Ln:1, Col:5, Pos:3) ','")
 
     def test_special_separator(self):

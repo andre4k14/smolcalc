@@ -1,6 +1,7 @@
 from typing import Generator, Optional
 
 from smolcalc.tokens import Token, TokenType
+from smolcalc.constants import PI, euler_s_number
 
 IGNORE = "_"
 WHITESPACE = " \n\t" + IGNORE
@@ -54,7 +55,7 @@ class Lexer:
                 yield self.generate_sqrt()
             elif self.current_char.lower() == "e":
                 self.advance()
-                yield Token(TokenType.NUMBER, float("2.718281828459045"))
+                yield Token(TokenType.NUMBER, euler_s_number)
             elif self.current_char == "!":
                 self.advance()
                 yield Token(TokenType.FACTORIAL)
@@ -115,7 +116,7 @@ class Lexer:
             self.raise_errors(f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns},"
                               f" Pos:{self.position_char}) '{self.current_char}'\nExpected I or i got {self.current_char}")
 
-        return Token(TokenType.NUMBER, float("3.141592653589793"))
+        return Token(TokenType.NUMBER, PI)
 
     def generate_log(self) -> Token:  # type: ignore
         log_str = self.current_char
