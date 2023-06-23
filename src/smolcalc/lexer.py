@@ -35,27 +35,17 @@ class Lexer:
             self.current_char = None  # type: ignore
 
     def raise_errors(self, error_msg: Optional[str] = None) -> None:
-        if self.current_char is None or self.current_char in OPERATORS:
-            if error_msg is not None:
-                raise Exception(f"Invalid syntax, ERROR: {error_msg}")
-            else:
-                raise Exception("Invalid syntax")
+        if (self.current_char is None or self.current_char in OPERATORS) and error_msg is not None:
+            raise Exception(f"Invalid syntax, ERROR: {error_msg}")
         raise Exception(
             f"Illegal character at position (Ln:{self.count_lines}, Col:{self.count_columns}, Pos:{self.position_char}) '{self.current_char}'")
 
-    def generate_tokens(self) -> Generator[Token, None, None]:
+    def generate_tokens(self) -> Generator[Optional[Token], None, None]:
         while self.current_char is not None:
             if self.current_char in WHITESPACE:
                 self.advance()
             elif self.current_char == self.decimal_separator or self.current_char in DIGITS:
-                num = self.generate_number()
-                if self.current_char == '!':
-                    self.advance()
-                    yield Token(TokenType.L_BRACKET)
-                    yield num
-                    yield Token(TokenType.FACTORIAL)
-                else:
-                    yield num
+                yield self.generate_number()
             elif self.current_char.lower() == "p":
                 yield self.generate_pi()
             elif self.current_char.lower() == "l":
@@ -65,6 +55,9 @@ class Lexer:
             elif self.current_char.lower() == "e":
                 self.advance()
                 yield Token(TokenType.NUMBER, float("2.718281828459045"))
+            elif self.current_char == "!":
+                self.advance()
+                yield Token(TokenType.FACTORIAL)
             elif self.current_char == '^':
                 self.advance()
                 yield Token(TokenType.EXPONENT)
@@ -85,11 +78,7 @@ class Lexer:
                 yield Token(TokenType.L_BRACKET)
             elif self.current_char == ')':
                 self.advance()
-                if self.current_char == '!':
-                    self.advance()
-                    yield Token(TokenType.FACTORIAL)
-                else:
-                    yield Token(TokenType.R_BRACKET)
+                yield Token(TokenType.R_BRACKET)
             else:
                 self.raise_errors()
 
