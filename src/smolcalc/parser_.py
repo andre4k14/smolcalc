@@ -138,10 +138,10 @@ class Parser:
 
             elif token.type == TokenType.PLUS:
                 self.advance()
-                return PlusNode(self.expr())
+                return PlusNode(self.exponent())
 
             elif token.type == TokenType.MINUS:
                 self.advance()
-                return MinusNode(self.expr())
+                return MinusNode(self.exponent())
 
             self.raise_error(f"Unexpected character '{tokens_to_string[token.type]}'")

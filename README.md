@@ -1,4 +1,4 @@
-# Smolcalc,
+ # Smolcalc,
 
 ![Tests](https://github.com/andre4k14/smolcalc/actions/workflows/tests.yml/badge.svg)
 

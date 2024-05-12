@@ -17,6 +17,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10{operator}(-50)"), "-40")
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "-40.1")
         self.assertEqual(evaluate(f"0.0{operator}0"), "0")
+        self.assertEqual(evaluate(f"+0.065+57"), "57.065")
 
         # just weird
         self.assertEqual(evaluate(f"{operator}."), "0")
@@ -39,6 +40,7 @@ class TestSmolcalc(unittest.TestCase):
         self.assertEqual(evaluate(f"10{operator}(-50.1)"), "60.1")
         self.assertEqual(evaluate(f"0.0{operator}0"), "0")
         self.assertEqual(evaluate(f"{operator}5"), "-5")
+        self.assertEqual(evaluate(f"-0.065-57"), "-57.065")
 
         # just weird
         self.assertEqual(evaluate(f"{operator}."), "0")
